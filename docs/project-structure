@@ -1,8 +1,8 @@
-assets - contains all javascript, css, images and fonts resources for the project 
+docs - contains all the documentation and files associated with the project
 common - contains all general purpose functions and classes used throughout the project
 config - contains all configuration files
 includes - contains common html files throughout the project
 models - contains all domain classes
 services - contains custom classes to interact with database; classes to enforce security and classes to perform file operation
-views - contains all the html views for the project
+public - contains all the php views, javascript, css, images and fonts resources for the project  for the project
 vendor - contains external php libraries
