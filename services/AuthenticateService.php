@@ -1,27 +1,30 @@
 <?php
 class AuthenticateService{
 
-    private static function _authenticateAdminAndTeacher($request){
-        $results = [];
+    public static function authenticate($user){
         $sql = "Select * from users WHERE email = ?";
         if( $statement = @Database::getInstance()->prepare($sql)){
-            @$statement->bind_param("s", $request["email"]);
+            @$statement->bind_param("s", $user->getEmail());
             $statement->execute();
             if($rows = $statement->get_result()){
                 $results = $rows->fetch_assoc();
             }
             if(isset($results)){
-                $hash = SecurityService::getHash($request["password"], $results["salt"]);
-                #check password against db password
-                if(strcmp($hash, $results["password"]) ==0){
-                    
-                    $token = self::generateToken($results);
-                    return $token;
+                $password = SecurityService::getHash($user->getEmail(), $results["salt"]);
+                if(strcmp($password, $authUser->getPassword()) == 0){
+                    $sessionUser = new User();
+                    $sessionUser->setId($user->getId());
+                    $sessionUser->setFirstName($user->getFirstName());
+                    $sessionUser->setLastName($user->getLastName());
+                    $sessionUser->setEmail($user->getUsername());
+                    $sessionUser->setGender($user->getGender());
+                    $sessionUser->setAccountVerified($user->getAccountVerified());
+                    $sessionUser->setUserType($user->getRole());
                 }
             }
         }
       
-        return $results;
+        return $sessionUser;
     }
 
 }
