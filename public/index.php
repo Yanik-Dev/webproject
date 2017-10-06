@@ -82,7 +82,7 @@
     </style>
     <div class="ui filter-bar menu fluid two item" style="">
         <a class="item">
-            <div class="ui floating type-filter dropdown labeled icon button">
+            <div class="ui floating  type-filter dropdown labeled icon button">
                 <i class="filter icon"></i>
                 <span class="text">Type</span>
                 <div class="menu">
