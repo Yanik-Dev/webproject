@@ -9,7 +9,7 @@ let LoginModule = (function(){
 
     function _authenticate(event){
         $.ajax({
-            url: './actions/login.php',
+            url: '../actions/login.php',
             dataType: 'text',
             type: 'post',
             contentType: 'application/x-www-form-urlencoded',
@@ -17,12 +17,11 @@ let LoginModule = (function(){
             success: _onLogin,
             error: _onError
         });
-        $.post('', _onLogin);
         event.preventDefault();
     }
 
     function _onLogin(data){
-
+        console.log(data)
     }
 
     function _onError( jqXhr, textStatus, errorThrown ){
