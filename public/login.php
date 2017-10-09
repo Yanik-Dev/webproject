@@ -24,6 +24,12 @@ include '../includes/public-nav.php';?>
             <input type="password" name="password" placeholder="Password">
           </div>
         </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example">
+            <label>Keep me signed in</label>
+          </div>
+        </div>
         <div class="ui fluid large teal submit button">Login</div>
       </div>
       <div class="ui error message"></div>
