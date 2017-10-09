@@ -22,4 +22,14 @@ class SecurityService{
     public static function decrypt($value){
         return base64_decode(urlencode($value));
     }
+
+    public static function generateCRSFToken(){
+        $token = md5(uniqid(rand(), true));
+        $_SESSION["crsf_token"] = $token;
+        return $token;
+    }
+
+    public static function getCRSFToken(){
+        return $_SESSION["crsf_token"];
+    }
 }
