@@ -3,6 +3,14 @@ session_start();
 require_once '../models/autoload.php';
 require_once '../services/autoload.php';
 
+if(!isset($_POST['submit'])){
+
+}
+
+if(strcmp(SecurityService::getCRSFToken(), $_POST['token'])== 0){
+
+}
+
 if (!isset($_POST['email'])) {
     
 } 
