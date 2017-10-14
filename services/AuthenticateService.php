@@ -14,8 +14,8 @@ class AuthenticateService{
                 if(strcmp($password, $authUser->getPassword()) == 0){
                     $sessionUser = new User();
                     $sessionUser->setId($user->getId());
-                    $sessionUser->setFirstName($user->getFirstName());
-                    $sessionUser->setLastName($user->getLastName());
+                    $sessionUser->setFirstname($user->getFirstname());
+                    $sessionUser->setLastname($user->getLastname());
                     $sessionUser->setEmail($user->getUsername());
                     $sessionUser->setGender($user->getGender());
                     $sessionUser->setAccountVerified($user->getAccountVerified());

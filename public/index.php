@@ -7,18 +7,18 @@
   <div class="ui container">
     <div class="ui centered grid ">
         <div class="row search-container">
-					<button id="filter-btn" class="circular ui icon button">
-							<i class="icon filter"></i>
-					</button>
-					<!-- search-bar -->
-					<div class="ui search" id="main-search">
-							<div class="ui icon input">
-									<input class="prompt" placeholder="Search..." type="text">
-									<i class="search icon"></i>
-							</div>
-							<div class="results"></div>
-					</div>
-					<!-- ./search-bar -->
+            <button id="filter-btn" class="circular ui icon button">
+                    <i class="icon filter"></i>
+            </button>
+            <!-- search-bar -->
+            <div class="ui search" id="main-search">
+                    <div class="ui icon input">
+                            <input class="prompt" placeholder="Search..." type="text">
+                            <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+            </div>
+            <!-- ./search-bar -->
         </div>
     </div>
     
