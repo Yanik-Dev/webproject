@@ -3,14 +3,14 @@ $title = "Login";
 include '../includes/header.php';
 include '../includes/public-nav.php';?>
 
-<div class="ui middle aligned center aligned grid">
+<div class="ui middle aligned center aligned grid" id="loginModule">
   <div class="column">
     <h2 class="ui teal image header">
       <div class="content">
         Login to your Account
       </div>
     </h2>
-    <form class="ui large form">
+    <form class="ui large form" id="login-form" method="post" action="../actions/login.php">
       <div class="ui stacked segment">
         <div class="field">
           <div class="ui left icon input">
@@ -30,7 +30,7 @@ include '../includes/public-nav.php';?>
             <label>Keep me signed in</label>
           </div>
         </div>
-        <div class="ui fluid large teal submit button">Login</div>
+        <button type="submit" id="authenticate-button" class="ui fluid large teal submit button">Login</button>
       </div>
       <div class="ui error message"></div>
     </form>
@@ -44,3 +44,4 @@ include '../includes/public-nav.php';?>
 </body>
 
 </html>
+<script src="./assets/js/login.module.js"></script>

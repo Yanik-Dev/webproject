@@ -1,23 +1,25 @@
 let LoginModule = (function(){
-    
+    console.log("init")
     //cache DOM
     let $el = $('#loginModule');
-    let $button = $el.find('authenticate-button');
+    let $button = $el.find('#authenticate-button');
+    let $loginForm = $('#login-form');
 
     //bind events
     $button.on('click', _authenticate);
 
-    function _authenticate(event){
+    function _authenticate(){
+        console.log($loginForm)
         $.ajax({
             url: '../actions/login.php',
             dataType: 'text',
             type: 'post',
             contentType: 'application/x-www-form-urlencoded',
-            data: $(this).serialize(),
+            data: $loginForm.serialize(),
             success: _onLogin,
             error: _onError
         });
-        event.preventDefault();
+        $loginForm.preventDefault();
     }
 
     function _onLogin(data){

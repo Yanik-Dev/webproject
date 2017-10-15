@@ -3,6 +3,9 @@ session_start();
 require_once '../models/autoload.php';
 require_once '../services/autoload.php';
 
+
+$response = new Response();
+
 if(!isset($_POST['submit'])){
 
 }
@@ -25,7 +28,15 @@ $user->setEmail($_POST['email']);
 $authUser = AuthenticateService::authenticate($user);
 
 if(isset($authUser)){
+    //creates user session then send back response with OK status
+    $response->setContent($authUser);
+    $response->_code(ResponseCode::HTTP_OK);
     SessionService::setSessionObj("user", $authUser);
-    return json_encode($authUser);
+    return json_encode($response);
+}else{
+    //creates user session then send back response with UNAUTHORIZED status
+    $response->setContent($authUser);
+    $response->_code(ResponseCode::HTTP_UNAUTHORIZED);
+    return json_encode($response);
 }
 ?>
