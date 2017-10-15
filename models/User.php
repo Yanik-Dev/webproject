@@ -5,6 +5,7 @@
 class User{
     private $userId;
     private $username;
+    private $email;
     private $password;
     private $firstname;
     private $lastname;
@@ -18,6 +19,7 @@ class User{
     //accessors
     public function getUserId(){ return $this->userId; }
     public function getUsername(){ return $this->username; }
+    public function getEmail(){ return $this->email; }
     public function getPassword(){ return $this->password; }
     public function getFirstname(){ return $this->firstname; }
     public function getLastname(){ return $this->lastname; }
@@ -31,6 +33,7 @@ class User{
     //mutators
     public function setUserId($userId){ $this->userId = $userId; }
     public function setUsername($username){ $this->username = $username; }
+    public function setEmail($email){ $this->email = $email; }
     public function setPassword($password){  $this->password = $password; }
     public function setFirstname($firstname){  $this->firstname = $firstname; }
     public function setLastname($lastname){  $this->lastname = $lastname; }

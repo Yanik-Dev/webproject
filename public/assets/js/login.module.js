@@ -2,16 +2,14 @@ let LoginModule = (function(){
     console.log("init")
     //cache DOM
     let $el = $('#loginModule');
-    let $button = $el.find('#authenticate-button');
     let $loginForm = $('#login-form');
 
     //bind events
-    $button.on('click', _authenticate);
+    $loginForm.on('submit', _authenticate);
 
-    function _authenticate(){
-        console.log($loginForm)
+    function _authenticate(event){
         $.ajax({
-            url: '../actions/login.php',
+            url: './actions/login.php',
             dataType: 'text',
             type: 'post',
             contentType: 'application/x-www-form-urlencoded',
@@ -19,7 +17,7 @@ let LoginModule = (function(){
             success: _onLogin,
             error: _onError
         });
-        $loginForm.preventDefault();
+        event.preventDefault();
     }
 
     function _onLogin(data){

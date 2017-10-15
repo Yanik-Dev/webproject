@@ -30,6 +30,6 @@ class SecurityService{
     }
 
     public static function getCRSFToken(){
-        return $_SESSION["crsf_token"];
+        return $_SESSION["crsf_token"] ?? null;
     }
 }

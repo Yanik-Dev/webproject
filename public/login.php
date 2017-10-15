@@ -10,7 +10,7 @@ include '../includes/public-nav.php';?>
         Login to your Account
       </div>
     </h2>
-    <form class="ui large form" id="login-form" method="post" action="../actions/login.php">
+    <form class="ui large form" id="login-form">
       <div class="ui stacked segment">
         <div class="field">
           <div class="ui left icon input">
@@ -30,7 +30,7 @@ include '../includes/public-nav.php';?>
             <label>Keep me signed in</label>
           </div>
         </div>
-        <button type="submit" id="authenticate-button" class="ui fluid large teal submit button">Login</button>
+        <button type="submit"  class="ui fluid large teal submit button">Login</button>
       </div>
       <div class="ui error message"></div>
     </form>

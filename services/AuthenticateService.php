@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__.'/../common/autoload.php';
+
 class AuthenticateService{
 
     public static function authenticate($user){
@@ -11,7 +13,7 @@ class AuthenticateService{
             }
             if(isset($results)){
                 $password = SecurityService::getHash($user->getEmail(), $results["salt"]);
-                if(strcmp($password, $authUser->getPassword()) == 0){
+                if(strcmp($password, $user->getPassword()) == 0){
                     $sessionUser = new User();
                     $sessionUser->setId($user->getId());
                     $sessionUser->setFirstname($user->getFirstname());
@@ -24,7 +26,7 @@ class AuthenticateService{
             }
         }
       
-        return $sessionUser;
+        return $sessionUser ?? null;
     }
 
 }

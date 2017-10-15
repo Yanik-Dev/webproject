@@ -23,9 +23,9 @@ $config_data = @file_get_contents(__DIR__.'/config.conf', false);
 if(!$config_data){
     $_CONFIG = [
         "DATABASECONFIG" => [
-            "SERVER" =>"127.0.0.1",
-            "USERNAME" => "root",
-            "PASSWORD" => "",
+            "SERVER" =>'localhost',
+            "USERNAME" => 'root',
+            "PASSWORD" => '',
             "DATABASE" => "app_db"
         ],
         "UPLOADDIR"=>"./uploads/"
