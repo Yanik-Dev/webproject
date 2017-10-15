@@ -4,5 +4,5 @@ config - contains all configuration files
 includes - contains common html files throughout the project
 models - contains all domain classes
 services - contains custom classes to interact with database; classes to enforce security and classes to perform file operation
-public - contains all the php views, javascript, css, images and fonts resources for the project  for the project
+public - contains all the php views, form-actions, javascript, css, images and fonts resources for the project  for the project
 vendor - contains external php libraries
