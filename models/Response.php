@@ -84,7 +84,7 @@ class Response{
     }
 
     public function setErrors($errors){
-        $this->_errors = $this->_errors;
+        $this->_errors = $errors;
     }
 
     public function setMessage($message){
