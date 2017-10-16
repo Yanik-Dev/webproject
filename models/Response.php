@@ -7,7 +7,7 @@ class Response{
     private $_content;
     private $_message;
 
-    private static $_statusMessages = [
+    private  $_statusMessages = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',            
@@ -84,7 +84,7 @@ class Response{
     }
 
     public function setErrors($errors){
-        $this->_errors = $errors;
+        $this->_errors = $this->_errors;
     }
 
     public function setMessage($message){
@@ -92,7 +92,7 @@ class Response{
     }
 
     public function sendResponse(){
-        $respone = $this->_setUpResponse();
+        $response = $this->_setUpResponse();
         echo json_encode($response);
     }
 
@@ -102,14 +102,14 @@ class Response{
             header("${key}: ${header}");
         }
 
-        $statusMessage = $this->$_statusMessages[$key];
-        
-        http_response_code($this->_code);
+        $statusMessage = $this->_statusMessages[$this->_code];
+
         $method = $_SERVER['REQUEST_METHOD'];
         if ($method == 'POST') {
             return [
-               "message" => $_message,
-               "errors" => $errors,
+               "status" => $this->_code,
+               "message" => $statusMessage,
+               "errors" => $this->_errors,
             ];
         } elseif ($method == 'GET') {
             return [
@@ -117,8 +117,8 @@ class Response{
              ];
         } elseif ($method == 'PUT') {
             return [
-                "message" => $_message,
-                "errors" => $errors,
+                "message" => $statusMessage,
+                "errors" => $this->_errors,
             ];
         } elseif ($method == 'DELETE') {
             return [
