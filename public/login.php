@@ -1,8 +1,9 @@
 <?php 
 $title = "Login";
 include '../includes/header.php';
-include '../includes/public-nav.php';?>
-
+include '../includes/public-nav.php';
+require '../services/SecurityService.php';
+?>
 <div class="ui middle aligned center aligned grid" id="loginModule">
   <div class="column">
     <h2 class="ui teal image header">
@@ -26,13 +27,17 @@ include '../includes/public-nav.php';?>
         </div>
         <div class="field">
           <div class="ui checkbox">
-            <input type="checkbox" name="example">
+            <input type="checkbox" name="rememberMe" value="yes">
             <label>Keep me signed in</label>
           </div>
         </div>
-        <button type="submit"  class="ui fluid large teal submit button">Login</button>
+        <input type="hidden" name="token" value="<?=SecurityService::generateCRSFToken();?>">
+        <button type="submit"  class="ui fluid large teal button">Login</button>
       </div>
       <div class="ui error message"></div>
+      <div class="ui negative message hide-element" id="error-msg">
+        <p>Incorrect username/password</p>
+      </div>
     </form>
 
     <div class="ui message">
