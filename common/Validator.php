@@ -16,7 +16,15 @@ class Validator {
     }
 
     public static function isPassword($value){
-        return preg_match("", $value);
+        //^: anchored to beginning of string
+        //\S*: any set of characters
+        //(?=\S{8,}): of at least length 8
+        //(?=\S*[a-z]): containing at least one lowercase letter
+        //(?=\S*[A-Z]): and at least one uppercase letter
+        //(?=\S*[\d]): and at least one number
+        //$: anchored to the end of the string
+        $regex = "";
+        return preg_replace("^\s*(?=\s{8,})(?=\s*[a-z])(?=\s*[A-Z])(?=\s*[\d])\s*$",'', $value);
     }
     
 }
