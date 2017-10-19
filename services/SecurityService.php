@@ -23,13 +23,13 @@ class SecurityService{
         return base64_decode(urlencode($value));
     }
 
-    public static function generateCRSFToken(){
+    public static function generateToken($name){
         $token = md5(uniqid(rand(), true));
-        $_SESSION["crsf_token"] = $token;
+        $_SESSION[$name] = $token;
         return $token;
     }
 
-    public static function getCRSFToken(){
-        return $_SESSION["crsf_token"] ?? null;
+    public static function getToken($name){
+        return $_SESSION[$name] ?? null;
     }
 }

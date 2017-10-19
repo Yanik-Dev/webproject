@@ -49,6 +49,7 @@ class SessionService{
             setcookie($name, serialize($value), $time);
         }
     }
+    
 
     /**
      * gets cookie
@@ -58,6 +59,7 @@ class SessionService{
         $result = (isset($_COOKIE[$name]))?unserialize($_COOKIE[$name]):null;
         return $result;
     }
+
 
     /**
      * deletes a user session
@@ -69,5 +71,19 @@ class SessionService{
         if(isset($_SESSION[$name])){
             unset($_SESSION[$name]);
         }
+    }
+
+
+    /**
+     * gets a unserialized object from a specific cookie or session if it is available
+     * @param string $name name cookie or session
+     * @return mixed 
+     */
+    public static function getActiveSession($name){
+        $session = null;
+        $session = (isset($_SESSION[$name]))?unserialize($_SESSION[$name]):null;
+        if(!isset($session))
+            $session = (isset($_COOKIE[$name]))?unserialize($_COOKIE[$name]):null;
+        return $session;
     }
 }

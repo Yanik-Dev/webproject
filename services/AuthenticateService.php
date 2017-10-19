@@ -12,16 +12,16 @@ class AuthenticateService{
                 $results = $rows->fetch_assoc();
             }
             if(isset($results)){
-                $password = SecurityService::getHash($user->getEmail(), $results["salt"]);
-                if(strcmp($password, $user->getPassword()) == 0){
+                $password = SecurityService::getHash($user->getPassword(), $results["salt"]);
+                if(strcmp($password, $results["password"]) == 0){
                     $sessionUser = new User();
-                    $sessionUser->setId($user->getId());
-                    $sessionUser->setFirstname($user->getFirstname());
-                    $sessionUser->setLastname($user->getLastname());
-                    $sessionUser->setEmail($user->getUsername());
-                    $sessionUser->setGender($user->getGender());
-                    $sessionUser->setAccountVerified($user->getAccountVerified());
-                    $sessionUser->setUserType($user->getRole());
+                    $sessionUser->setUserId($results["user_id"]);
+                    $sessionUser->setFirstname($results["first_name"]);
+                    $sessionUser->setLastname($results["last_name"]);
+                    $sessionUser->setEmail($results["email"]);
+                    $sessionUser->setGender($results["gender"]);
+                    $sessionUser->setIsAccountVerified($results["account_verified"]);
+                    $sessionUser->setUserType($results["user_type"]);
                 }
             }
         }
