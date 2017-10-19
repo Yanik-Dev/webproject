@@ -12,47 +12,47 @@
             </button>
             <!-- search-bar -->
             <div class="ui search" id="main-search">
-                    <div class="ui icon input">
-                            <input class="prompt" placeholder="Search..." type="text">
-                            <i class="search icon"></i>
-                    </div>
-                    <div class="results"></div>
+                <div class="ui icon input">
+                        <input class="prompt" placeholder="Search..." type="text">
+                        <i class="search icon"></i>
+                </div>
+                <div class="results"></div>
             </div>
             <!-- ./search-bar -->
         </div>
     </div>
     
     <div class="ui centered grid">
-			<?php for($i=0; $i < 10; $i++): ?>
-			<div class="sixteen wide mobile eight wide tablet eight wide computer column" >
-			  <!-- offering-listing -->
-				<div class="ui piled segment">
-					<div class="ui items">
-						<div class="item">
-								<div class="ui small image">
-								<img src="http://www.placehold.it/300x300">
-								</div>
-								<div class="content">
-										<a class="header">Header</a>
-										<div class="meta">
-												<p>$ 3000</p>
-										</div>
-										<div class="description">
-												<p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae minima </p>
-										</div>
-										<div class="extra">
-										<div class="ui star rating" data-max-rating="5"></div>
-										<button class="ui right floated icon button">
-												<i class="phone icon"></i>
-										</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- ./offering-listing -->
-			</div> 
-			<?php endfor;?>
+        <?php for($i=0; $i < 10; $i++): ?>
+        <div class="sixteen wide mobile eight wide tablet eight wide computer column" >
+            <!-- offering-listing -->
+            <div class="ui piled segment">
+                <div class="ui items">
+                    <div class="item">
+                            <div class="ui small image">
+                            <img src="http://www.placehold.it/300x300">
+                            </div>
+                            <div class="content">
+                                <a class="header">Header</a>
+                                <div class="meta">
+                                    <p>$ 3000</p>
+                                </div>
+                                <div class="description">
+                                        <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae minima </p>
+                                </div>
+                                <div class="extra">
+                                <div class="ui star rating" data-max-rating="5"></div>
+                                <button class="ui right floated icon button">
+                                        <i class="phone icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ./offering-listing -->
+        </div> 
+        <?php endfor;?>
     </div>
 
 		<div class="load-indicator centered ui grid">
@@ -144,7 +144,6 @@
         <div class="ui button">OK</div>
         </div>
     </div>
-
 </div>
 <script>
 let SearchModule = (function(){

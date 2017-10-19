@@ -1,3 +1,13 @@
 .hide-element{
     display: none;
 }
+
+body {
+    background-color: #eee;
+}
+body > .grid {
+    height: 100%;
+}
+.column {
+    max-width: 450px;
+}
