@@ -112,9 +112,7 @@ class Response{
                "errors" => $this->_errors,
             ];
         } elseif ($method == 'GET') {
-            return [
-                "results" => $this->_content
-             ];
+            return $this->_content;
         } elseif ($method == 'PUT') {
             return [
                 "message" => $statusMessage,
