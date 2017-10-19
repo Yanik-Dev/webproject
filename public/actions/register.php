@@ -50,15 +50,16 @@ else if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
 
 if ($password == "") {
     $errors[] = "password is required";
+}
+else if(!strlen($password) < 8){
+    $errors[] = "password must at least 8 characters";
 }else{
     if(strcmp($password, $confirmPassword)!=0){
         $errors[] = "passwords do not match";
     }
 }
 
-if(!Validator::isPassword($_POST['password'])){
-    $errors[] = "password must contain at least:\n 8 characters \n 1 lowercase \n 1 uppercase \n 1 digit ";
-}
+
 
 if(count($errors) > 0){
     $response->setCode(ResponseCode::HTTP_BAD_REQUEST);

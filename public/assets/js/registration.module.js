@@ -65,7 +65,7 @@ let RegistrationModule = (function(){
                 
                 {
                   type   : "minLength[8]",
-                  prompt : 'At least one number, a co'
+                  prompt : 'Password should have at least 8 characters'
                 }
               ]
             },
