@@ -1,14 +1,16 @@
-<style type="text/css">
-    body {
-      background-color: #eee;
+<?php 
+
+  require '../services/autoload.php';
+  //check if user is already logged in
+  $session = SessionService::getActiveSession("user");
+  if( $session !== null){
+    if(strtolower($title) =="login" || strtolower($title) =="register"){
+      header("Location: ./index.php");
+      exit;
     }
-    body > .grid {
-      height: 100%;
-    }
-    .column {
-      max-width: 450px;
-    }
-  </style>
+  }
+  $token = SecurityService::generateToken("token");
+?>
   <script>
   $(document)
     .ready(function() {
@@ -65,11 +67,20 @@
   </div>
 </div>
   <div class="right menu">
+  <?php if($session == null): ?>
     <a class="item <?= ($title =='Login')?'active':'' ?>" href="./login.php">
       login
     </a>
     <a class="item <?= ($title =='Register')?'active':'' ?>" href="./register.php">
       Sign Up
     </a>
+  <?php else: ?>
+    <a class="browse icon item" href="../actions/login.php?logout=yes&token=<?=$token?>&page=<?=$title?>">
+      <i class="large industry icon"></i> 
+    </a>
+    <a class="browse icon item" href="../actions/login.php?logout=yes&token=<?=$token?>&page=<?=$title?>">
+      <i class="large power icon"></i> 
+    </a>
+  <?php endif; ?>
   </div>
 </div>
