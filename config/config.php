@@ -28,7 +28,7 @@ if(!$config_data){
             "PASSWORD" => '',
             "DATABASE" => "app_db"
         ],
-        "UPLOADDIR"=>"./uploads/"
+        "UPLOAD_DIRECTORY"=>"../uploads/"
     ];
     file_put_contents(__DIR__.'/config.conf', serialize($_CONFIG));
 }else{

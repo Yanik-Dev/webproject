@@ -108,8 +108,9 @@ class Response{
         if ($method == 'POST') {
             return [
                "status" => $this->_code,
-               "message" => $statusMessage,
+               "message" => $this->_message,
                "errors" => $this->_errors,
+               "content"=> $this->_content
             ];
         } elseif ($method == 'GET') {
             return $this->_content;

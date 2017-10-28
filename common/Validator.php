@@ -8,7 +8,7 @@
 class Validator {
     
     public static function isPhoneNumber($value){
-        return preg_replace("^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$", '', $value);
+        //return preg_replace("^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$", '', $value);
     }
     
     public static function isEmail($value){

@@ -12,6 +12,7 @@ class User{
     private $userType;
     private $gender;
     private $salt;
+    private $image;
     private $dateCreated;
     private $dateUpdated;
     private $isAccountVerified;
@@ -19,6 +20,7 @@ class User{
 
     //accessors
     public function getUserId(){ return $this->userId; }
+    public function getImage(){ return $this->image; }
     public function getUsername(){ return $this->username; }
     public function getEmail(){ return $this->email; }
     public function getGender(){ return $this->gender; }
@@ -34,6 +36,7 @@ class User{
 
     //mutators
     public function setUserId($userId){ $this->userId = $userId; }
+    public function setImage($image){ $this->image = $image; }
     public function setUsername($username){ $this->username = $username; }
     public function setEmail($email){ $this->email = $email; }
     public function setGender($gender){ $this->gender = $gender; }
@@ -46,4 +49,5 @@ class User{
     public function setDateUpdated($dateUpdated){  $this->dateUpdated= $dateUpdated; }
     public function setIsAccountVerified($isAccountVerified){  $this->isAccountVerified = $isAccountVerified; }
     public function setResetToken($token){ return $this->resetToken = $token; }
+
 }

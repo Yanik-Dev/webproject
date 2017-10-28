@@ -16,7 +16,7 @@ let RegistrationModule = (function(){
     //bind events
     $registrationForm.on('submit', _register);
     $termsBtn.on('click', _toggleSubmitBtn);
-    $emailInput.bind('blur', _checkIfEmailExist);
+    $emailInput.bind('blur', _checkIfEmailExist); 
     
     //init
     $('.ui.radio.checkbox').checkbox();
