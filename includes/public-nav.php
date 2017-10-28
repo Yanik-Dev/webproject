@@ -29,7 +29,7 @@
   </script>
 </head>
 <body>
-<div class="ui pointing menu">
+<div class="ui pointing main menu">
   <a class="item <?= ($title =='Home')?'active':'' ?>" href="./index.php" >
   <i class="large home icon"></i> Home
   </a>
