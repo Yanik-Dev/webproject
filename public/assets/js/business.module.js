@@ -1,5 +1,5 @@
 let BusinessModule = (function($){
-    //local variables
+    //local letiables
     let exist = 0;
     let previousName = '';
     let $selectedElement;
@@ -36,7 +36,6 @@ let BusinessModule = (function($){
         $telephone: $businessForm.find('input#telephone')[0],
         $email: $businessForm.find('input#email')[0],
         $website: $businessForm.find('input#website')[0],
-
     }
    
     //init
@@ -55,6 +54,7 @@ let BusinessModule = (function($){
             },
             description: {
               identifier: 'description',
+              optional: true,
               rules: [
                 {
                   type   : 'maxLength[155]',
@@ -85,74 +85,87 @@ let BusinessModule = (function($){
     //events handlers  
     function _onUpload(){
         
-        var imgPath = $(this)[0].value;
-        var $this = $(this);
-        var $dimmer = $this.closest('div.segment-cell').find('.ui.uploading.dimmer');
-        var ext = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+        $uploadErrorMsg.addClass("hide-element");
+        let imgPath = $(this)[0].value;
+        let $this = $(this);
+        let $container = $this.closest('div.segment-cell')
+        let $dimmer = $container.find('.ui.uploading.dimmer');
+        let $uploadErrorMsg = $container.find('.mini.bottom.attached.error.message');
+        let ext = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
         if ($this[0].files[0].size > 2000000 || $this[0].files[0].fileSize > 2000000){
+            $uploadErrorMsg.find('span').text("File cannot exceed 2MB.");
+            $uploadErrorMsg.removeClass("hide-element");
             return;
         }
         if (ext == "gif" || ext == "png" || ext == "jpg" || ext == "jpeg") {
-            if (typeof (FileReader) != "undefined") {
-                var imageViewer = $this.closest('.ui.small.image').find('img');
-                var file = $this[0].files[0];
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    
-                    formData = new FormData();
-                    formData.append('file', file);
-                    $dimmer.addClass('active');
-                    $.ajax({
-                        url: '../../actions/business.php?id='+$this.closest('.item').find('.editBtn').attr("data-id"),
-                        type: 'POST',
-                        dataType: 'text',
-                        contentType: false,
-                        processData: false,
-                        data: formData,
-                        success:function(data){
-                            console.log(data)
-                            let result = JSON.parse(data);
-                            if(!result){
-                                imageViewer.attr('src', 'assets/img/img-wireframe.png');  
-                            }else{
-                                imageViewer.attr('src', e.target.result)   
-                            }
-
-                            $dimmer.removeClass('active');
-                        },
-                        error: _onError,
-                        xhr: function () {
-                            
-                            var xhr = $.ajaxSettings.xhr();
-                            xhr.upload.onprogress = function (e) {
-                                let percent = Math.floor(e.loaded / e.total * 100);  
-                                $dimmer.find('.text').text('uploading '+percent+'%')                              
-                               
-                            };
-                            return xhr;
-                        }
-                    })
-                }
-                reader.readAsDataURL($(this)[0].files[0]);
-            } else {
-                alert("This browser does not support FileReader.");
+            if (typeof (FileReader) == "undefined") {
+                $uploadErrorMsg.find('span').text("This browser does not support FileReader.");
+                $uploadErrorMsg.removeClass("hide-element");
+                return;
             }
         } else {
-            alert("Pls select only images");
+            $uploadErrorMsg.find('span').text("This browser does not support FileReader."); 
+            $uploadErrorMsg.removeClass("hide-element");
+            return;
+             
         }
-       
+        let imageViewer = $this.closest('.ui.small.image').find('img');
+        let file = $this[0].files[0];
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            
+            formData = new FormData();
+            formData.append('file', file);
+            $dimmer.addClass('active');
+            $dimmer.find(".text.loader").text('Uploading');
+            $.ajax({
+                url: '../../actions/business.php?id='+$this.closest('.item').find('.editBtn').attr("data-id"),
+                type: 'POST',
+                dataType: 'text',
+                contentType: false,
+                processData: false,
+                data: formData,
+                success:function(data){
+                    console.log(data)
+                    let result = JSON.parse(data);
+                    if(!result){
+                        imageViewer.attr('src', 'assets/img/img-wireframe.png');  
+                    }else{
+                        imageViewer.attr('src', e.target.result)   
+                    }
+
+                    $dimmer.removeClass('active');
+                },
+                error: _onError,
+                xhr: function () {
+                    
+                    let xhr = $.ajaxSettings.xhr();
+                    xhr.upload.onprogress = function (e) {
+                        let percent = Math.floor(e.loaded / e.total * 100);  
+                        $dimmer.find('.text').text('uploading '+percent+'%')                              
+                       
+                    };
+                    return xhr;
+                }
+            })
+        }
+        reader.readAsDataURL($(this)[0].files[0]);
     }
 
 
     function _onViewMoreDescription(){
         $item = $(this).closest('div.segment-cell');
-        
+        let mobile = (($item.find('span.mobile').html())?'Contact No.1: '+$item.find('span.mobile').html()+' <br />':'');
+        let telephone = (($item.find('span.telephone').html())?'Contact No.2: '+$item.find('span.telephone').html()+' <br />':'');
+        let email = (($item.find('span.email').html())?'Email: '+$item.find('span.email').html()+' <br />':'');
+        let website = (($item.find('span.website').html())?'Website: '+$item.find('span.website').html()+' <br />':'');
         $descriptionModal.find('.header').text($item.find('span.name').html());
         $descriptionModal.find('.description').text($item.find('span.description').html());
-        $descriptionModal.find('.mobile').text($item.find('span.mobile').html());
-        $descriptionModal.find('.telephone').text($item.find('span.telephone').html());
-        $descriptionModal.find('.email').text($item.find('span.email').html());
-        $descriptionModal.find('.website').text($item.find('span.website').html());
+        $descriptionModal.find('.mobile').html(mobile);
+        $descriptionModal.find('.telephone').html(telephone);
+        $descriptionModal.find('.email').html(email);
+        $descriptionModal.find('.website').html(website);
+        $descriptionModal.find('.contact-qrcode').attr('src', $item.find('span.qrcode').text());
     
         $descriptionModal.modal('show');
 
@@ -219,11 +232,13 @@ let BusinessModule = (function($){
         console.log(data)
         let result = JSON.parse(data);
         if(result.status == 200){
+            let business = result.content;
             if(formElements.$id.value > 0){
+               $selectedElement.find('span.qrcode').html(business.contactQrCode);
                 _onEditFinish();
             }else{
-                var business = result.content;
                 business.logo = (business.logo)?'./uploads/'+business.logo:'assets/img/img-wireframe.png';
+                business.contactQrCode = (business.contactQrCode)?'./uploads/'+business.contactQrCode:'';
                 $businesses.append(Mustache.render(businessTemplate, business));
             }
             $errorMsg.hide();  
@@ -251,7 +266,7 @@ let BusinessModule = (function($){
         let telephone = $item.find('span.telephone').html();
         $selectedElement = $item;
         previousName = $item.find('span.name').html();
-        
+
         formElements.$name.value = previousName;
         formElements.$id.value = $(this).attr('data-id');
         formElements.$description.value = $item.find('span.description').html();
@@ -277,21 +292,29 @@ let BusinessModule = (function($){
 
     //functions
     function _getBusinessList(){
-        var q = (this.value)?this.value:'';
+        let q = (this.value)?this.value:'';
+        let $images = [];
         $.ajax({
             url: '../../actions/business.php?search='+q+'&page='+pagination.page+'&limit='+pagination.limit,
             type: 'get',
             dataType: 'json',
             success:function(data){
+                $businesses.empty();
                 if(data.length == 0){
                     $addBusinessBtn.text("Add Your First Business");
                     return;
                 }
                 $(document).trigger('results', data);
-                $businesses.empty();
                 $.each(data,(i,business)=>{
                     business.logo = (business.logo)?'./uploads/'+business.logo:'assets/img/img-wireframe.png';
+                    business.contactQrCode = (business.contactQrCode)?'./uploads/'+business.contactQrCode:'';
                     $businesses.append(Mustache.render(businessTemplate, business));
+                    let $item = $businesses.find('div.business-item-'+business.id);
+                    $item.find('.ui.uploading.dimmer').addClass('active');
+                    $images[i] = $item.find('img');
+                    $images[i].on("load", ()=>{
+                        $images[i].closest('.segment').find('.ui.uploading.dimmer').removeClass('active');
+                    })
                 });
                 pagination.page++;
             },
@@ -299,8 +322,6 @@ let BusinessModule = (function($){
         })
         
     }
-
-    
 
     function _checkIfNameExist(event){
         if( !$businessForm.form('is valid', "name") ){
