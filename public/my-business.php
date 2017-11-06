@@ -6,19 +6,18 @@
    <div class="ui container">
         <div class="ui centered padded grid">
             <div class="eight column" >
-                <button class="fluid ui icon button" id="add-business">
-                        <i class="plus icon"></i> Add 
-                </button>
+              <button class="ui teal labeled icon button" id="add-business">
+                <span>Add New Business</span> 
+                <i class="add icon"></i>
+              </button>
             </div>
         </div>
-
        <div class="ui centered padded grid " id="businesses">
-        
+
         </div>
     </div>
 </div>
 <!-- close grid -->
-
 
 <!-- business form modal -->
 <div class="ui medium business modal">
@@ -31,10 +30,9 @@
     <h4 class="ui dividing header"><i class="building icon"></i> Business Information</h4>
     <div class="sixteen wide field">
       <label>Business Name</label>
-      <input type="text" name="name" id="name" placeholder="">
-      <span class="ui mini text inline loader"></span>
-      <span class="ui red hide-element" style="color: red" id="exist-msg"><i class="close icon"></i>Business already exist.</span>
-    </div>
+        <span class="ui hide-element" style="color: red" id="exist-msg"><i class="close icon"></i>Business already exist.</span>
+        <input type="text" name="name" id="name" placeholder="">
+      </div>
     <div class="sixteen wide field">
         <label>Business Description</label>
         <textarea rows="2" name="description" id="description"></textarea>
@@ -99,7 +97,6 @@
     <i class="window close outline icon"></i>
     All items relating to this business will also be deleted. <br />
     Are you sure you want to perform this action?
-
   </div>
   <div class="content">
     <p></p>
@@ -121,75 +118,77 @@
 <div class="ui tiny description modal">
   <div class="header"></div>
   <div class="scrolling content">
+    <div class="meta">
+        <span><h3><i class="info icon"></i> Description</h3></span>
+    </div>
     <p class="description"></p>
 
     <div class="meta">
-        <span>Contact Info</span>
+        <span><h3><i class="phone icon"></i> Contact Information</h3></span>
     </div>
+
+    <img src="" alt="" class="contact-qrcode" align="left">
+    </br />
     <span class="mobile"></span>
-    <span class="telephone"></span><br />
-    <span class="email"></span> <br />
+    <span class="telephone"></span>
+    <span class="email"></span> 
     <span class="website"></span>
+    
   </div>
 </div>
 <!-- ./description modal -->
 
 <!-- business item template -->
 <script type="text/template" id="business-template">
-<div class="sixteen wide mobile eight wide tablet eight wide computer column segment-cell" >
+<div class="sixteen wide mobile eight wide tablet eight wide computer column segment-cell business-item-{{id}}" >
     <div class="ui raised segment">
-        <a class="ui ribbon label" style="font-size:14px"><i class="building icon"></i><span class="name">{{name}}</span></a>
+        <a class="ui business-name" style="color: #3d3d3d; font-size:16px; font-weight:bold"><span class="name">{{name}}</span></a>
         <div class="ui items">
             <div class="item">
-
                 <div class="ui small image">
-                    <img class="visible content" src="{{logo}}">
-                      <div class="mini ui icon button circular" style="position: absolute; top:5px;right: 3px;">
-                         <i class="large upload icon"></i> 
-                         <input class="file-input"  type="file" name="file">
-                      </div>
+                    <img src="{{logo}}">
+                    <div class="mini ui icon button circular" style="position: absolute; top:5px;right: 3px;">
+                        <i class="large upload icon"></i> 
+                        <input class="file-input"  type="file" name="file">
+                    </div>
                 </div>
                 <div class="content">
-                
-                <div class="meta">
-                    <span>Description</span>
-                </div>
-                <div class="description">
-                    <span class="description">{{description}}</span> <br />
-                    <span class="street">{{street}}</span>,  <span class="city">{{city}}</span>,  <span class="province">{{province}}</span><br />
-                    <div style="display:none">
-                    <span class="mobile">{{mobile}}</span>
-                    {{#telephone}}
-                    <span class="telephone">{{telephone}}</span><br />
-                    {{/telephone}}
-                    {{^telephone}}
-                    <br />
-                    {{/telephone}}
-                    {{#email}}
-                    <span class="email">{{email}}</span> <br />
-                    {{/email}}
-                    <span class="website">{{website}}</span>
-                    </div>
-                </div> 
-                <div class="extra">
-                    <button class="mini ui icon labeled  button circular  editBtn"  data-id="{{id}}"><i class="large edit icon"></i> Edit</button>
-                    <button class="mini ui icon labeled  button circular viewMore"  data-id="{{id}}">
-                    <i class="large list icon"></i> Offerings
-                  </button>
-                  <button class="mini ui icon labeled  button circular viewMore"  data-id="{{id}}">
-                      <i class="large close icon"></i> More
+                  <div class="meta">
+                      <span>Description</span>
+                  </div>
+                  <div class="description">
+                      <span class="description">{{description}}</span> <br />
+                      <span class="street">{{street}}</span>,  <span class="city">{{city}}</span>,  <span class="province">{{province}}</span><br />
+                      <div style="display:none">
+                      <span class="mobile">{{mobile}}</span>
+                      <span class="telephone">{{telephone}}</span><br />
+                      <span class="email">{{email}}</span> <br />
+                      <span class="website">{{website}}</span>
+                      <span class="qrcode">{{contactQrCode}}</span>
+                      </div>
+                  </div> 
+                  <div class="extra">
+                      <button class="mini ui icon labeled  button circular  editBtn"  data-id="{{id}}"><i class="large edit icon"></i> Edit</button>
+                      <button class="mini ui icon labeled  button circular viewMore"  data-id="{{id}}">
+                      <i class="large list icon"></i> Offerings
                     </button>
-                </div>
-                <button class="mini ui icon button circular deleteBtn"  style="position: absolute; top:8px;right: 8px;" data-id="{{id}}">
-                <i class="large close icon"></i> 
-                </button>
-                    
+                    <button class="mini ui icon labeled  button circular viewMore"  data-id="{{id}}">
+                        <i class="large close icon"></i> More
+                      </button>
+                  </div>
+                  <button class="mini ui icon button circular deleteBtn"  style="position: absolute; top:8px;right: 8px;" data-id="{{id}}">
+                  <i class="large close icon"></i> 
+                  </button>
                 </div>
             </div>
         </div>
-    <div class="ui uploading inverted dimmer">
-    <div class="ui indeterminate text loader">Uploading</div>
-  </div>
+        <div class="ui uploading inverted dimmer">
+          <div class="ui indeterminate text loader">Uploading</div>
+        </div>
+        <div class="ui mini bottom attached error message hide-element">
+          <i class="close icon"></i>
+          <span></span>
+        </div>
     </div> 
 </div> 
 </script>

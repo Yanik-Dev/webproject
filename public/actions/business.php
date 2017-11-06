@@ -7,14 +7,20 @@ ini_set("display_errors", 1);
 session_start();
 require_once __DIR__.'/../../config/config.php';
 require_once __DIR__.'/../../common/autoload.php';
-require_once '../../models/autoload.php';
-require_once '../../services/autoload.php';
+require_once __DIR__.'/../../models/autoload.php';
+require_once __DIR__.'/../../services/autoload.php';
+require_once __DIR__.'/../../lib/phpqrcode/qrlib.php';
+
 
 global $_CONFIG;
 $uploadService = new UploadService($_CONFIG["UPLOAD_DIRECTORY"]);
 $response = new Response();
 $errors = [];
-$ownerId = SessionService::getActiveSession("user")->getUserId();
+if(SessionService::getActiveSession("user"))
+    $ownerId = SessionService::getActiveSession("user")->getUserId();
+else
+    $ownerId = '';
+
 
 //checks if a file is posted thens uploads it
 if(isset($_FILES['file'])){
@@ -57,18 +63,24 @@ if(isset($_GET['name'])){
 if(isset($_GET['delete'])){
     $id = $_GET['delete'];
     $result =  BusinessService::delete($id);
-    if($result){
+    if($result["status"]){
+        $imagesToRemove = $result["paths"];
+        foreach($imagesToRemove as $imageToRemove){
+            $uploadService->removeFile($imageToRemove);
+        }
+
         $response->setCode(ResponseCode::HTTP_OK);
         $response->setContent($result);
         $response->sendResponse();
+
     }
     exit;
 }
 
-//get all businesses for a specific owner
+//get all businesses
 if(isset($_GET["page"])){
     $search = $_GET["search"] ?? '';
-    $result = BusinessService::findAllByOwner($ownerId, $search);
+    $result = BusinessService::findAll($ownerId, $search);
     $response->setCode(ResponseCode::HTTP_OK);
     $response->setContent($result);
     $response->sendResponse();
@@ -76,15 +88,15 @@ if(isset($_GET["page"])){
 }
 
 //get posted values
-$name = trim($_POST['name']);
-$description = trim($_POST['description']);
-$street = trim($_POST['street']);
-$city = trim($_POST['city']);
-$province = trim($_POST['province']);
-$mobile = trim($_POST['mobile']);
-$telephone = trim($_POST['telephone']);
-$website = trim($_POST['website']);
-$email = trim($_POST['email']);
+$name = ucwords(trim(strip_tags($_POST['name'])));
+$description = Utility::sanitize($_POST['description']);
+$street = Utility::sanitize($_POST['street']);
+$city = Utility::sanitize($_POST['city']);
+$province = Utility::sanitize($_POST['province']);
+$mobile = Utility::sanitize($_POST['mobile']);
+$telephone = Utility::sanitize($_POST['telephone']);
+$website = strtolower(Utility::sanitize($_POST['website']));
+$email = strtolower(Utility::sanitize($_POST['email']));
 $token = $_POST['token'];
 
 //validation checks
@@ -112,8 +124,11 @@ if ($description != "") {
     $errors[] = "no description";
 }
 
-if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-     $errors[] = "invalid email. A valid email is required";
+
+if($website != ""){
+    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $errors[] = "invalid email. A valid email is required";
+    }
 }
 
 if($website != ""){
@@ -122,12 +137,17 @@ if($website != ""){
     }
 }
 
-
-if($mobile != ""){
-   // if(!Validator::isPhoneNumber($mobile)){
-   //     $errors[] = "invalid contact number 2";
-   // }
+if($telephone != ""){
+   if(Validator::isPhoneNumber($telephone) == 0){
+        $errors[] = "invalid contact number 2";
+   }
 }
+
+if($mobile == ""){
+    if(Validator::isPhoneNumber($mobile) == 0){
+         $errors[] = "invalid contact number 1";
+    }
+ }
 
 if(count($errors) > 0){
     $response->setCode(ResponseCode::HTTP_BAD_REQUEST);
@@ -162,14 +182,27 @@ $business->setIsVerified("NO");
 $business->setContactInformation($contactInformation);
 $business->setAddress($address);
 
+$qrCodeFilename = $uploadService->generateRandomFileName(str_replace(' ','',$name));
+QRcode::png(''.$business->getName().'\n'.$contactInformation->getMobile(), $_CONFIG["UPLOAD_DIRECTORY"].$qrCodeFilename); 
 
+//register a new business if id is empty otherwise updates an
+//existing business
 if($_POST['id'] ==""){
+    $business->setContactQrCode($qrCodeFilename);
     $id = BusinessService::register($business);
     $response->setMessage('inserted successfully');
 }else{
+    $oldBusinessInfo = BusinessService::findOne($_POST['id']);
+    $oldQrCode = $oldBusinessInfo["contactQrCode"];
     $business->setId($_POST['id']);
+    $business->setContactQrCode($qrCodeFilename);
     $id = BusinessService::update($business);
     $response->setMessage('updated successfully');
+
+    //remove old qrcode if update was successful
+    if($id){
+        $uploadService->removeFile($oldQrCode);
+    }
 }
 
 if(isset($id)){
@@ -187,9 +220,13 @@ if(isset($id)){
         "mobile"=>$business->getContactInformation()->getMobile(), 
         "telephone"=>$business->getContactInformation()->getTelephone(),
         "email"=>$business->getContactInformation()->getEmail(),
+        "contactQrCode"=>$business->getContactQrCode()
     ]);
     $response->sendResponse();
 }else{
+    //remove uploaded qrcode
+    UploadService::removeFile($qrCodeFilename);
+
     //send back empty response with UNAUTHORIZED status
     $response->setCode(ResponseCode::HTTP_INTERNAL_SERVER_ERROR);
     $response->setMessage('');

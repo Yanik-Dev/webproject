@@ -13,11 +13,13 @@ class Business{
     private $isVerified;
     private $address;
     private $contactInformation;
+    private $contactQrCode;
 
     //accessors
     public function getId(){ return $this->Id; }
     public function getName(){ return $this->name; }
     public function getDescription(){ return $this->description; }
+    public function getContactQrCode(){ return $this->contactQrCode; }
     public function getLogo(){ return $this->logo; }
     public function getOwner(){ return $this->owner; }
     public function getDateCreated() { return $this->dateCreated; }
@@ -30,6 +32,7 @@ class Business{
     public function setId($id){ $this->Id = $id; }
     public function setName($name){ $this->name = $name; }
     public function setDescription($description){ $this->description = $description; }
+    public function setContactQrCode($contactQrCode){ $this->contactQrCode = $contactQrCode; }
     public function setLogo($logo){  $this->logo = $logo; }
     public function setOwner($owner){  $this->owner = $owner; }
     public function setPublished($isPublished){  $this->isPublished = $isPublished; }

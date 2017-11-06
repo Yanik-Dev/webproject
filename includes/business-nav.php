@@ -47,7 +47,7 @@
   </div>
   <div class="pusher" style="background-color:#eee">
     <div class="ui top attached main menu">
-        <a class="browse icon item" id="menu-btn">
+        <a class="ui browse teal icon item" id="menu-btn">
             <i class="larger sidebar icon"></i>
         </a>
     <div class="right menu">
@@ -88,7 +88,7 @@ $(document).ready(function(){
     //local functions
     function _getBusinessList(){
         $.ajax({
-            url: './actions/business.php?page=0',
+            url: './actions/business.php?admin=yes&page=0',
             type: 'get',
             dataType: 'json',
             success:function(data){

@@ -16,6 +16,7 @@
     .ready(function() {
       $('.browse')
       .popup({
+        on:'click',
         inline     : true,
         hoverable  : true,
         position   : 'bottom left',
@@ -33,15 +34,18 @@
   <a class="item <?= ($title =='Home')?'active':'' ?>" href="./index.php" >
   <i class="large home icon"></i> Home
   </a>
-  <a class="browse item <?= ($title =='Business')?'active':'' ?>" href="./business.php">
+  <a class="browse item <?= ($title =='Business')?'active':'' ?>" >
   <i class="large search icon"></i> Find Business
   </a>
-<div class="ui flowing basic admission popup">
+<div class="ui flowing basic popup">
+
+<div class="column">
+ <a class="item header" href="./businesslistings.php">All <i class="angle right icon"></i></a>  
+ </div>
   <div class="ui three column relaxed divided grid">
     <div class="column">
       <h4 class="ui header">Business</h4>
       <div class="ui link list">
-        <a class="item">Design &amp; Urban Ecologies</a>
         <a class="item">Fashion Design</a>
         <a class="item">Fine Art</a>
         <a class="item">Strategic Design</a>
@@ -75,8 +79,8 @@
       Sign Up
     </a>
   <?php else: ?>
-    <a class="browse icon item" href="../actions/login.php?logout=yes&token=<?=$token?>&page=<?=$title?>">
-      <i class="large industry icon"></i> 
+    <a class="browse icon item" href="./my-business.php">
+      <i class="large address card icon"></i> 
     </a>
     <a class="browse icon item" href="../actions/login.php?logout=yes&token=<?=$token?>&page=<?=$title?>">
       <i class="large power icon"></i> 

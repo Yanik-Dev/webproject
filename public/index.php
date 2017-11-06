@@ -150,8 +150,8 @@ let SearchModule = (function(){
     //local variable declaration
     let offerings = [];
 
-		//cache DOM elements
-		let $el = $('#search-module');
+    //cache DOM elements
+    let $el = $('#search-module');
     let $modal = $el.find('.ui.modal');
     let $typeFilter = $el.find('.ui.type-filter.dropdown');
     let $categoryFilter = $el.find('.ui.category-filter.dropdown');
@@ -166,7 +166,7 @@ let SearchModule = (function(){
     $filterBtn.on('click', _toggleFilter);
 
     //init
-    $modal.modal('show');
+    //$modal.modal('show');
     $typeFilter.dropdown();
     $categoryFilter.dropdown();
     $filterBar.hide();
