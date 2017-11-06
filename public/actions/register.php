@@ -8,7 +8,6 @@ require_once __DIR__.'/../../common/autoload.php';
 require_once '../../models/autoload.php';
 require_once '../../services/autoload.php';
 
-
 $response = new Response();
 $errors = [];
 
@@ -24,12 +23,12 @@ if(isset($_GET)){
 }
 
 //get posted values
-$firstname = trim($_POST['firstname']);
-$lastname = trim($_POST['lastname']);
-$email = trim($_POST['email']);
+$firstname = Utility::sanitize($_POST['firstname']);
+$lastname = Utility::sanitize($_POST['lastname']);
+$email = strtolower(Utility::sanitize($_POST['email']));
 $password = trim($_POST['password']);
 $confirmPassword = trim($_POST['confirmPassword']);
-$gender = trim($_POST['gender']);
+$gender = Utility::sanitize($_POST['gender']);
 $token = $_POST['token'];
 
 //validation checks

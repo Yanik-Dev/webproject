@@ -11,7 +11,7 @@ class UploadService{
     public function uploadSingleFile($file){
         $status = "error";
         $result = "";
-        $randomFilename = $this->_generateRandomFileName($file["name"]);
+        $randomFilename = $this->generateRandomFileName($file["name"]);
         if (move_uploaded_file($file["tmp_name"], $this->_uploadPath.$randomFilename)) {
             $status = "ok";
             $result = $randomFilename;
@@ -30,7 +30,7 @@ class UploadService{
         $filesNotUploaded = [];
         foreach($files["tmp_name"] as $path){
             $count = $uploadedCount+$notUploadedCount;
-            $randomFilename = $this->_generateRandomFileName($files["name"][$count]);
+            $randomFilename = $this->generateRandomFileName($files["name"][$count]);
             if (!$j = move_uploaded_file($path, $this->_uploadPath.$randomFilename)) {
                 $filesNotUploaded[]= $randomFilename;
                 $notUploadedCount++;
@@ -65,9 +65,9 @@ class UploadService{
      * @param $filename 
      * @return random filename
      */
-    private function _generateRandomFileName($filename){
+    public function generateRandomFileName($filename){
         $temp = explode(".", $filename);
-        $randomFilename = $temp[0].'_'.round(microtime(true)) . '.' . end($temp);
+        $randomFilename = $temp[0].'_'.round(microtime(true));
         return $randomFilename;
     }
 }
