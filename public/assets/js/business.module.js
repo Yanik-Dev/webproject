@@ -42,6 +42,7 @@ let BusinessModule = (function($){
     _getBusinessList()
     $businessForm.form({
         on: 'blur',
+        inline: true,
         fields: {
             name: {
               identifier: 'name',
@@ -57,7 +58,7 @@ let BusinessModule = (function($){
               optional: true,
               rules: [
                 {
-                  type   : 'maxLength[155]',
+                  type   : 'maxLength[100]',
                   prompt : 'description have a max of 100 characters'
                 }
               ]
@@ -70,7 +71,7 @@ let BusinessModule = (function($){
     $nameInput.bind('blur', _checkIfNameExist);
     $addBusinessBtn.on('click', _toggleModal);
     $modal.modal({onHidden: _resetBusinessForm});
-    $searchBar.on('change', _getBusinessList);
+    $searchBar.on('keyup', _getBusinessList);
     
 
     $closeModal.on('click', ()=>{ 
@@ -174,6 +175,8 @@ let BusinessModule = (function($){
     function _resetBusinessForm(){
         $businessForm[0].reset();   
         $businessForm.find('.error').removeClass('error');
+        $businessForm.find('.ui.basic.red.pointing.prompt.label').remove();
+        
         $modal.modal('hide'); 
     }
 
@@ -292,7 +295,7 @@ let BusinessModule = (function($){
 
     //functions
     function _getBusinessList(){
-        let q = (this.value)?this.value:'';
+        let q = (this.value)?this.value.trim():'';
         let $images = [];
         $.ajax({
             url: '../../actions/business.php?search='+q+'&page='+pagination.page+'&limit='+pagination.limit,
@@ -300,8 +303,8 @@ let BusinessModule = (function($){
             dataType: 'json',
             success:function(data){
                 $businesses.empty();
-                if(data.length == 0){
-                    $addBusinessBtn.text("Add Your First Business");
+                if(data.length == 0 && q ==""){
+                    $addBusinessBtn.find("span").text("Add Your First Business");
                     return;
                 }
                 $(document).trigger('results', data);
