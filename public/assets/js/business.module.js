@@ -62,6 +62,17 @@ let BusinessModule = (function($){
                   prompt : 'description have a max of 100 characters'
                 }
               ]
+            },
+            mobile: {
+                identifier: 'mobile',
+                optional: true,
+                rules: [
+                  {
+                    type   : 'empty',
+                    prompt : ''
+                  }
+                ]
+              },
             }
         }
     });
@@ -71,7 +82,7 @@ let BusinessModule = (function($){
     $nameInput.bind('blur', _checkIfNameExist);
     $addBusinessBtn.on('click', _toggleModal);
     $modal.modal({onHidden: _resetBusinessForm});
-    $searchBar.on('keyup', _getBusinessList);
+    $searchBar.on('keyup', $.debounce(_getBusinessList, 300));
     
 
     $closeModal.on('click', ()=>{ 
@@ -107,9 +118,9 @@ let BusinessModule = (function($){
         } else {
             $uploadErrorMsg.find('span').text("This browser does not support FileReader."); 
             $uploadErrorMsg.removeClass("hide-element");
-            return;
-             
+            return;     
         }
+        
         let imageViewer = $this.closest('.ui.small.image').find('img');
         let file = $this[0].files[0];
         let reader = new FileReader();
@@ -292,7 +303,6 @@ let BusinessModule = (function($){
     }
 
     
-
     //functions
     function _getBusinessList(){
         let q = (this.value)?this.value.trim():'';
@@ -309,6 +319,17 @@ let BusinessModule = (function($){
                 }
                 $(document).trigger('results', data);
                 $.each(data,(i,business)=>{
+
+                    //limit the number of characters shown for the description
+                    business.limitText = function(){
+                        let ret = this.description;
+                        let maxLength = 45;
+                        if (ret.length > maxLength) {
+                            ret = ret.substr(0,maxLength-3) + "...";
+                        }
+                        return ret;
+                    }
+
                     business.logo = (business.logo)?'./uploads/'+business.logo:'assets/img/img-wireframe.png';
                     business.contactQrCode = (business.contactQrCode)?'./uploads/'+business.contactQrCode:'';
                     $businesses.append(Mustache.render(businessTemplate, business));

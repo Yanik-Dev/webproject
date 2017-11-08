@@ -50,7 +50,7 @@
                       <span>Description</span>
                   </div>
                   <div class="description">
-                      <span class="description">{{description}}</span> <br />
+                      <span class="description">{{limitText}}</span> <br />
                       <span class="street">{{street}}</span>,  <span class="city">{{city}}</span>,  <span class="province">{{province}}</span><br />
                       <div style="display:none">
                       <span class="mobile">{{mobile}}</span>
