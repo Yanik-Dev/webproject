@@ -1,12 +1,22 @@
 <?php
+/**
+ * 
+ * @package services
+ * @author Yanik Blake
+ */
+class BusinessService{
 
-class businessService{
-
+    /**
+     * create a business profile
+     * @param Business $business
+     * @return int business id
+     */
     public static function register($business){
         Database::getInstance()->autocommit(false);
-        $sql = "INSERT INTO businesses SET business_name = ?, business_description = ?, fk_user_id=?, publish_business = 'NO', is_verified ='NO', date_created = now()";
+        $sql = "INSERT INTO businesses SET business_name = ?, contact_qrcode = ?, business_description = ?, fk_user_id=?, publish_business = 'NO', is_verified ='NO', date_created = now()";
         if( $statement = @Database::getInstance()->prepare($sql)){
-            @$statement->bind_param("ssi", $business->getName(),
+            @$statement->bind_param("sssi", $business->getName(),
+                                            $business->getContactQrCode(),
                                             $business->getDescription(),
                                             $business->getOwner()->getUserId());
             if(!$statement->execute()){
@@ -153,6 +163,7 @@ class businessService{
       
         return (isset($business))?true:false;
     }
+    
     public static function updateLogo($business){
         $path = "";
         if($statement = @Database::getInstance()->prepare("SELECT business_logo FROM businesses WHERE business_id = ?")){
@@ -212,7 +223,7 @@ class businessService{
         return (isset($result))?["status"=> true, "paths"=>$paths]:["status"=> false];
     }
 
-    public static function findAll($owner_id, string $name){
+    public static function findAll($owner_id, string $name=''){
         $sql = "SELECT * FROM businesses LEFT JOIN addresses ON addresses.fk_business_id = businesses.business_id 
                 LEFT JOIN contact_information ON contact_information.fk_business_id = businesses.business_id
                 WHERE  fk_user_id LIKE CONCAT('%', ?,'%') AND business_name LIKE CONCAT('%', ?,'%')";

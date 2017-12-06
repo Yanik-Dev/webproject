@@ -2,7 +2,12 @@
 
 
 class AuthenticateService{
-
+    
+    /**
+     * 
+     * @param User $user
+     * @return User
+     */
     public static function authenticate($user){
         $sql = "Select * from users WHERE email = ?";
         if( $statement = @Database::getInstance()->prepare($sql)){
@@ -20,8 +25,10 @@ class AuthenticateService{
                     $sessionUser->setLastname($results["last_name"]);
                     $sessionUser->setEmail($results["email"]);
                     $sessionUser->setGender($results["gender"]);
+                    $sessionUser->setDateCreated($results["date_created"]);
                     $sessionUser->setIsAccountVerified($results["account_verified"]);
                     $sessionUser->setUserType($results["user_type"]);
+                    $sessionUser->setImage($results["image"]);
                 }
             }
         }

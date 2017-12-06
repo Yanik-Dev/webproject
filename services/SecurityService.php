@@ -1,7 +1,8 @@
 <?php
-/*
+/**
  * provides hashing, encrypting and decrypting services
- * @author Yanik 
+ * @package services
+ * @author Yanik Blake
  */
 class SecurityService{
     
