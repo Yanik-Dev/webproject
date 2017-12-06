@@ -1,17 +1,19 @@
 <?php 
 $title = "Login";
 include '../includes/header.php';
-include '../includes/public-nav.php';
+include '../includes/public-layout.php';
 ?>
 <div class="ui middle aligned center aligned grid" id="loginModule">
   <div class="column">
+
     <h2 class="ui teal image header">
-      <div class="content">
-        Login to your Account
+      <div class="content ">
+        <img style="width: 150px;" src="./assets/img/blookup-logo.png" alt="">
       </div>
     </h2>
     <form class="ui large form">
       <div class="ui stacked segment">
+      <h3 class="ui header"> Sign into your account</h3>
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>

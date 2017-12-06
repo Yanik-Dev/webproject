@@ -1,7 +1,7 @@
 <?php 
  $title = "Home";
  include '../includes/header.php';
- include '../includes/public-nav.php';
+ include '../includes/public-layout.php';
 ?>
 <div id="search-module">
   <div class="ui container">
@@ -55,95 +55,11 @@
         <?php endfor;?>
     </div>
 
-		<div class="load-indicator centered ui grid">
-		<div class="ui icon message column">
-			<i class="notched circle loading icon"></i>
-			<div class="content">
-				<div class="header">
-				</div>
-			</div>
-		</div>
-		</div>
+		
   </div>
-    <style>
-        .ui.filter-bar{
-            margin-bottom: 0px;
-            position: fixed !important; 
-            bottom: 0px; 
-            max-height:45px;
-            width: 100%;
-        }
-        .load-indicator{
-            margin-bottom: 70px !important;
-        }
-        .load-indicator .header, .notched{
-            text-align:center;
-        }
-    </style>
-    <div class="ui filter-bar menu fluid two item" style="">
-        <a class="item">
-            <div class="ui floating  type-filter dropdown labeled icon button">
-                <i class="filter icon"></i>
-                <span class="text">Type</span>
-                <div class="menu">
-                    <div class="ui icon search input">
-                    <i class="search icon"></i>
-                    <input type="text" placeholder="Search tags...">
-                    </div>
-                    <div class="divider"></div>
-                    <div class="header">
-                    <i class="tags icon"></i>
-                    Tag Label
-                    </div>
-                    <div class="scrolling menu">
-                    <div class="item">
-                        Any
-                    </div>
-                    
-                    </div>
-                </div>
-            </div>
-        </a>
-        <a class="item">
-            <div class="ui floating category-filter dropdown labeled icon button">
-                <i class="filter icon"></i>
-                <span class="text">Category</span>
-                <div class="menu">
-                    <div class="ui icon search input">
-                    <i class="search icon"></i>
-                    <input type="text" placeholder="Search tags...">
-                    </div>
-                    <div class="divider"></div>
-                    <div class="header">
-                    <i class="tags icon"></i>
-                    Tag Label
-                    </div>
-                    <div class="scrolling menu">
-                    <div class="item">
-                        Any
-                    </div>
-                    
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
+    
 
-    <div class="ui modal">
-        <i class="close icon"></i>
-        <div class="image content">
-        <div class="image">
-            <img src="http://www.placehold.it/300x300">
-        </div>
-        <div class="description">
-            A description can appear on the right
-        </div>
-        </div>
-        <div class="actions">
-        <div class="ui button">Cancel</div>
-        <div class="ui button">OK</div>
-        </div>
-    </div>
+    
 </div>
 <script>
 let SearchModule = (function(){
@@ -167,8 +83,6 @@ let SearchModule = (function(){
 
     //init
     //$modal.modal('show');
-    $typeFilter.dropdown();
-    $categoryFilter.dropdown();
     $filterBar.hide();
     $ratings.rating();
     $searchContainer.visibility({ type: 'fixed'});

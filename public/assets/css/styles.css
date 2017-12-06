@@ -5,13 +5,20 @@
 body {
     background-color: #eee;
 }
+
 body > #loginModule.grid, body > #registrationModule.grid {
     height: 100%;
 }
 #loginModule .column, #registrationModule .column {
     max-width: 450px;
 }
-
+.load-indicator{
+    bottom: 0px;
+    margin-top: 20px !important;
+}
+.load-indicator .header, .notched{
+    text-align:center;
+}
 .ui.main.menu{
     margin-top: 0px !important;
 }

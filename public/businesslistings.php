@@ -1,7 +1,7 @@
 <?php 
  $title = "Business-List";
  include '../includes/header.php';
- include '../includes/public-nav.php';
+ include '../includes/public-layout.php';
 ?>
    <div class="ui container">
        <div class="ui centered padded grid " id="businesses">
@@ -30,7 +30,6 @@
     <span class="telephone"></span>
     <span class="email"></span> 
     <span class="website"></span>
-  
   </div>
 </div>
 <!-- ./description modal -->

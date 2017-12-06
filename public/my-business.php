@@ -1,7 +1,7 @@
 <?php 
  $title = "Business-List";
  include '../includes/header.php';
- include '../includes/business-nav.php';
+ include '../includes/admin-layout.php';
 ?>
    <div class="ui container">
         <div class="ui centered padded grid">
@@ -35,7 +35,8 @@
       </div>
     <div class="sixteen wide field">
         <label>Business Description</label>
-        <textarea rows="2" name="description" id="description"></textarea>
+        <textarea rows="2" maxlength="255" name="description" class="description-textarea" id="description"></textarea>
+        <div id="textarea-feedback"><span class="remaining">255</span>/255</div>
     </div>
     <h4 class="ui dividing header"><i class="pin icon"></i> Location Information</h4>
     <div class="field">
@@ -58,7 +59,7 @@
     <div class="field">
         <div class="fields">
           <div class="eight wide field">
-        <label>Contact Number 1</label>
+            <label>Contact Number 1</label>
             <input type="text"name="mobile" id="mobile" placeholder="(876) 000-0000">
           </div>
           <div class="eight wide field">
@@ -156,10 +157,11 @@
                   <div class="meta">
                       <span>Description</span>
                   </div>
-                  <div class="description">
-                      <span class="description">{{limitText}}</span> <br />
+                  <div>
+                      <span class="description-limited">{{limitText}}</span> <br />
                       <span class="street">{{street}}</span>,  <span class="city">{{city}}</span>,  <span class="province">{{province}}</span><br />
                       <div style="display:none">
+                      <span class="description">{{description}}</span> <br />
                       <span class="mobile">{{mobile}}</span>
                       <span class="telephone">{{telephone}}</span><br />
                       <span class="email">{{email}}</span> <br />
@@ -176,7 +178,7 @@
                         <i class="large close icon"></i> More
                       </button>
                   </div>
-                  <button class="mini ui icon button circular deleteBtn"  style="position: absolute; top:8px;right: 8px;" data-id="{{id}}">
+                  <button class="mini ui icon button circular deleteBtn"  style="background: transparent; position: absolute; top:8px;right: 8px;" data-id="{{id}}">
                   <i class="large close icon"></i> 
                   </button>
                 </div>

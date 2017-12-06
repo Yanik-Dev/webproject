@@ -2,7 +2,7 @@
 <?php 
  $title = "Register";
  include '../includes/header.php';
- include '../includes/public-nav.php';
+ include '../includes/public-layout.php';
 ?>
 <div class="ui middle aligned centered aligned grid" id="registrationModule">
   <div class="column">
