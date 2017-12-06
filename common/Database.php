@@ -15,10 +15,10 @@ require_once __DIR__."/../config/config.php";
     public static function getInstance(){
         global $_CONFIG;
         if(self::$instance == null){
-             self::$instance = new Mysqli(  $_CONFIG["DATABASECONFIG"]["SERVER"], 
-                                            $_CONFIG["DATABASECONFIG"]["USERNAME"],
-                                            $_CONFIG["DATABASECONFIG"]["PASSWORD"] , 
-                                            $_CONFIG["DATABASECONFIG"]["DATABASE"]
+             self::$instance = new Mysqli(  $_CONFIG["DATABASE"]["SERVER"], 
+                                            $_CONFIG["DATABASE"]["USERNAME"],
+                                            $_CONFIG["DATABASE"]["PASSWORD"] , 
+                                            $_CONFIG["DATABASE"]["DATABASE"]
                                          );
             if (self::$instance->connect_errno) {
                 echo "Failed to connect to MySQL: (" . self::$instance->connect_errno . ") " . self::$instance->connect_error;

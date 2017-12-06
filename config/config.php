@@ -22,13 +22,24 @@ $config_data = @file_get_contents(__DIR__.'/config.conf', false);
 //write configuration files to database if config file is not found
 if(!$config_data){
     $_CONFIG = [
-        "DATABASECONFIG" => [
+        "DATABASE" => [
             "SERVER" =>'localhost',
             "USERNAME" => 'root',
-            "PASSWORD" => '',
+            "PASSWORD" => 'password',
             "DATABASE" => "app_db"
         ],
-        "UPLOAD_DIRECTORY"=>"../uploads/"
+        "UPLOAD"=>[
+            "DIRECTORY"=>"../uploads/"
+        ],
+        "EMAIL"=>[
+            "username" =>"yanikblake@gmail.com",
+            "password" =>"N@ruto123",
+            "senderemail"=>"admin@webproject.com",
+            "sender"=>"admin",
+            "replyname"=>"no-reply",
+            "replyemail"=>"noreply@webproject.com"
+        ],
+        "ENVIRONMENT" => "development"
     ];
     file_put_contents(__DIR__.'/config.conf', serialize($_CONFIG));
 }else{

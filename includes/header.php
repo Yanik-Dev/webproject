@@ -24,7 +24,7 @@ ini_set("display_errors", 1);
     <script src="./assets/lib/debounce.js"></script>
     <script src="./assets/lib/mustache.min.js"></script>
     <script src="./assets/lib/semantic-ui/semantic.min.js"></script>
-<body>
+<body class="">
 <div class="ui app-level nag">
   <span class="title">
     You are offline
