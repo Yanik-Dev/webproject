@@ -23,18 +23,17 @@ class UserService{
     }
 
     public static function update($user){
-        $sql = "UPDATE users SET firstname = ?, lastname = ?, gender=? WHERE user_id = ? ";
+        $sql = "UPDATE users SET firstname = ?, lastname = ?, email=? WHERE user_id = ? ";
         if( $statement = @Database::getInstance()->prepare($sql)){
             @$statement->bind_param("sssi", $user->getFirstname(),
                                                $user->getLastname(),
-                                               $user->getGender(),
+                                               $user->getEmail(),
                                                $user->getUserId());
             if(!$result = $statement->execute()){
                $user = null;
             }
             
         }
-      
         return $user ?? null;
     }
 
@@ -42,7 +41,7 @@ class UserService{
     public static function changePassword($user){
         $sql = "UPDATE users SET password = ?, salt = ? WHERE user_id = ? ";
         if( $statement = @Database::getInstance()->prepare($sql)){
-            @$statement->bind_param("sssi", $user->getPassword(),
+            @$statement->bind_param("ssi", $user->getPassword(),
                                             $user->getSalt(),
                                             $user->getUserId());
             if(!$result = $statement->execute()){
@@ -52,6 +51,30 @@ class UserService{
         }
       
         return (isset($user))?true:false;
+    }
+
+    public static function updateImage($user){
+        $path = "";
+        if($statement = @Database::getInstance()->prepare("SELECT users.image FROM users WHERE user_id = ?")){
+            @$statement->bind_param("i", $user->getUserId());
+            $statement->execute();
+            if($rows = $statement->get_result()){
+                while($row = $rows->fetch_assoc()){
+                    $path = $row["image"];
+                }
+            }
+            $sql = "UPDATE users SET image = ? WHERE user_id = ? ";
+            if( $statement = @Database::getInstance()->prepare($sql)){
+                @$statement->bind_param("si", $user->getImage(),
+                                                $user->getUserId());
+                if(!$result = $statement->execute()){
+                 $user = null;
+                }
+                
+            }
+        }
+      
+        return (isset($user))?["status"=> true, "path"=>$path]:["status"=> false];
     }
 
     public static function exist($email){
