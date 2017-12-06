@@ -1,5 +1,5 @@
 let BusinessModule = (function($){
-    //local letiables
+    //local variables
     let exist = 0;
     let previousName = '';
     let $selectedElement;
@@ -49,7 +49,7 @@ let BusinessModule = (function($){
               rules: [
                 {
                   type   : 'empty',
-                  prompt : 'name cannot be empty'
+                  prompt : 'Name cannot be empty'
                 }
               ]
             },
@@ -58,8 +58,8 @@ let BusinessModule = (function($){
               optional: true,
               rules: [
                 {
-                  type   : 'maxLength[100]',
-                  prompt : 'description have a max of 100 characters'
+                  type   : 'maxLength[255]',
+                  prompt : 'Description have a max of 255 characters'
                 }
               ]
             },
@@ -67,14 +67,36 @@ let BusinessModule = (function($){
                 identifier: 'mobile',
                 optional: true,
                 rules: [
-                  {
-                    type   : 'empty',
-                    prompt : ''
-                  }
-                ]
-              },
-            }
+                    {
+                        type   : 'regExp',
+                        value  : '/^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$/',
+                        prompt : 'Phone number is invalid. Expected Format: (XXX) 000-0000'
+                    }
+                 ]
+            },
+            telephone: {
+                identifier: 'telephone',
+                optional: true,
+                rules: [
+                    {
+                        type   : 'regExp',
+                        value  : '/^\\s*(?:\\+?(\\d{1,3}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*$/',
+                        prompt : 'Phone number is invalid. Expected Format: (XXX) 000-0000'
+                    }
+                 ]
+            },
+            website: {
+                identifier: 'website',
+                optional: true,
+                rules: [
+                    {
+                        type   : 'url',
+                        prompt : 'Invalid website address. Expected Format: http://example.com'
+                    }
+                 ]
+            },
         }
+        
     });
     
     //bind events
@@ -93,7 +115,14 @@ let BusinessModule = (function($){
     $businesses.delegate('.deleteBtn', 'click', _onDelete)
     $businesses.delegate('.viewMore', 'click', _onViewMoreDescription)
     $businesses.delegate('.file-input','change',_onUpload);
+    $('.description-textarea').keyup(function() {
+        var textLength = $(this).val().length;
+        var textRemaining = 255 - textLength;
 
+        $('#textarea-feedback span.remaining').html(textRemaining);
+    });
+
+    
     //events handlers  
     function _onUpload(){
         
@@ -188,6 +217,7 @@ let BusinessModule = (function($){
         $businessForm.find('.error').removeClass('error');
         $businessForm.find('.ui.basic.red.pointing.prompt.label').remove();
         
+        $('#textarea-feedback span.remaining').html(255);
         $modal.modal('hide'); 
     }
 
@@ -248,9 +278,18 @@ let BusinessModule = (function($){
         if(result.status == 200){
             let business = result.content;
             if(formElements.$id.value > 0){
-               $selectedElement.find('span.qrcode').html(business.contactQrCode);
+               $selectedElement.find('span.qrcode').html('./uploads/'+business.contactQrCode);
                 _onEditFinish();
             }else{
+                 //limit the number of characters shown for the description
+                 business.limitText = function(){
+                    let ret = this.description;
+                    let maxLength = 45;
+                    if (ret.length > maxLength) {
+                        ret = ret.substr(0,maxLength-3) + "...";
+                    }
+                    return ret;
+                }
                 business.logo = (business.logo)?'./uploads/'+business.logo:'assets/img/img-wireframe.png';
                 business.contactQrCode = (business.contactQrCode)?'./uploads/'+business.contactQrCode:'';
                 $businesses.append(Mustache.render(businessTemplate, business));
@@ -264,6 +303,11 @@ let BusinessModule = (function($){
     }
 
     function _onEditFinish(){
+        let descriptionLimit = formElements.$description.value;
+        if(descriptionLimit.length>45){
+            descriptionLimit = descriptionLimit.substr(0, 45 - 3)+"...";
+        }
+        $selectedElement.find('span.description-limited').html(descriptionLimit);
         $selectedElement.find('span.description').html(formElements.$description.value);
         $selectedElement.find('span.name').html(formElements.$name.value);
         $selectedElement.find('span.street').html(formElements.$street.value);
@@ -291,7 +335,8 @@ let BusinessModule = (function($){
         formElements.$telephone.value = (telephone)?telephone:'';
         formElements.$email.value = $item.find('span.email').html();
         formElements.$website.value = $item.find('span.website').html();
-        $modal.find('#business-submit-btn').text('Save Changes')
+        $modal.find('#business-submit-btn').text('Save Changes');
+        $('#textarea-feedback span.remaining').html(255-$item.find('span.description').text().length);
         $modal.modal('show');
 
     }

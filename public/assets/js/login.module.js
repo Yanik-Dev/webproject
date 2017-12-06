@@ -23,8 +23,8 @@ let LoginModule = (function(){
             identifier: 'password',
             rules: [
               {
-                type   : 'minLength[8]',
-                prompt : 'Your password must be at least {ruleValue} characters'
+                type   : 'empty',
+                prompt : 'Password cannot be empty'
               }
             ]
           },
