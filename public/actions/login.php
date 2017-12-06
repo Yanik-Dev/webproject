@@ -1,14 +1,6 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-
-session_start();
-require_once __DIR__.'/../../common/autoload.php';
-require_once '../../models/autoload.php';
-require_once '../../services/autoload.php';
-
+require_once __DIR__.'/../../core/init.php';
 
 $response = new Response();
 $errors = [];

@@ -1,26 +1,16 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-
-session_start();
-require_once __DIR__.'/../../config/config.php';
-require_once __DIR__.'/../../common/autoload.php';
-require_once __DIR__.'/../../models/autoload.php';
-require_once __DIR__.'/../../services/autoload.php';
+require_once __DIR__.'/../../core/init.php';
 require_once __DIR__.'/../../lib/phpqrcode/qrlib.php';
 
-
-global $_CONFIG;
-$uploadService = new UploadService($_CONFIG["UPLOAD_DIRECTORY"]);
+$uploadService = new UploadService($_CONFIG["UPLOAD"]["DIRECTORY"]);
 $response = new Response();
 $errors = [];
+
 if(SessionService::getActiveSession("user"))
     $ownerId = SessionService::getActiveSession("user")->getUserId();
 else
     $ownerId = '';
-
 
 //checks if a file is posted thens uploads it
 if(isset($_FILES['file'])){
@@ -49,7 +39,6 @@ if(isset($_FILES['file'])){
 }
  
 
-
 //check if business name is unique
 if(isset($_GET['name'])){
     $result =  BusinessService::exist($_GET['name']);
@@ -72,7 +61,6 @@ if(isset($_GET['delete'])){
         $response->setCode(ResponseCode::HTTP_OK);
         $response->setContent($result);
         $response->sendResponse();
-
     }
     exit;
 }
@@ -113,12 +101,12 @@ if($ownerId == "") {
 }
 
 if($name == "") {
-    $errors[] = "email is required";
+    $errors[] = "business name is required";
 }
 
 if ($description != "") {
-    if(strlen($description) > 155 ){
-        $errors[] = "descripton cannot be greater than 70 characters";
+    if(strlen($description) > 255 ){
+        $errors[] = "descripton cannot be greater than 255 characters";
     }
 }else{
     $errors[] = "no description";
@@ -147,7 +135,7 @@ if($mobile == ""){
     if(Validator::isPhoneNumber($mobile) == 0){
          $errors[] = "invalid contact number 1";
     }
- }
+}
 
 if(count($errors) > 0){
     $response->setCode(ResponseCode::HTTP_BAD_REQUEST);

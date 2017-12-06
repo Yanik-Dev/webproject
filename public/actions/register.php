@@ -1,14 +1,20 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-
-require_once __DIR__.'/../../common/autoload.php';
-require_once '../../models/autoload.php';
-require_once '../../services/autoload.php';
-
+require_once __DIR__.'/../../core/init.php';
+/*
 $response = new Response();
+$emailService = new MailService($_CONFIG['EMAIL']);
+
+$emailService->setRecipents([
+                                [
+                                    "name"=>"Yanik", 
+                                    "email"=>"yanikblake@yahoo.com"
+                                ]
+                            ]);
+$emailService->setSubject('testing');
+$emailService->setBody("<p>Testing</p>");
+$emailService->sendMail();
+exit;*/
 $errors = [];
 
 //check if email is unique
@@ -50,15 +56,13 @@ else if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
 if ($password == "") {
     $errors[] = "password is required";
 }
-else if(!strlen($password) < 8){
+else if(strlen($password) < 8){
     $errors[] = "password must at least 8 characters";
 }else{
     if(strcmp($password, $confirmPassword)!=0){
         $errors[] = "passwords do not match";
     }
 }
-
-
 
 if(count($errors) > 0){
     $response->setCode(ResponseCode::HTTP_BAD_REQUEST);
