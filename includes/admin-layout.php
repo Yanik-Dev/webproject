@@ -1,12 +1,9 @@
 <?php 
 
-  require '../common/autoload.php';
-  require '../services/autoload.php';
-  require '../models/autoload.php';
+  include '../../includes/panel-header.php';
   //check if user is already logged in
-  $session = SessionService::getActiveSession("user");
   if( $session == null){
-      header("Location: ./login.php");
+      header("Location: ../login.php");
       exit;
   }
   $token = SecurityService::generateToken("token");
@@ -16,18 +13,18 @@
 
   <div class="ui left inline vertical sidebar menu uncover">
         <div class="item sidebar-header" style="">
-            <img class="ui  tiny circular image" src="<?='./uploads/'.$session->getImage()??'./assets/img/300x300.png'?>">
+            <img class="ui  tiny circular image" src="<?='./../uploads/'.$session->getImage()??'./../assets/img/300x300.png'?>">
             <span class="header"><?= strtoupper($session->getFirstname()).' '.strtoupper($session->getLastname())?></span>
         </div>
        <div class="item">
-            <div class="header">Offerings</div>
+            <a class="header" href="./offerings.php">Offerings</a>
             <div class="menu">
             <a class="item">Products</a>
             <a class="item">Services</a>
             </div>
         </div>
          <div class="item">
-            <a class="header" href="./my-business.php">Businesses (<span id="no-of-business"></span>)</a>
+            <a class="header" href="./business.php">Businesses (<span id="no-of-business"></span>)</a>
             <div class="menu" id="business-list">
             </div>
         </div>
@@ -40,8 +37,9 @@
         <div class="item">
             <div class="header">Support</div>
             <div class="menu">
-            <a class="item">E-mail Support</a>
-            <a class="item">FAQs</a>
+            <a class="item">Coming Soon</a>
+           <!-- <a class="item">E-mail Support</a>
+            <a class="item">FAQs</a>-->
             </div>
         </div>
   </div>
@@ -58,7 +56,7 @@
         </div>
         <div class="results"></div>
     </div>
-        <a class="browse icon item" href="../actions/login.php?logout=yes&token=<?=$token?>&page=<?=$title?>">
+        <a class="browse icon item" href="./../actions/login.php?logout=yes&token=<?=$token?>&page=<?=$title?>">
         <i class="large power icon"></i> 
         </a>
     </div>
@@ -91,7 +89,7 @@ $(document).ready(function(){
     function _getBusinessList(){
         $businessList.html('');
         $.ajax({
-            url: './actions/business.php?admin=yes&page=0',
+            url: './../actions/business.php?admin=yes&page=0',
             type: 'get',
             dataType: 'json',
             success:function(data){

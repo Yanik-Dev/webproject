@@ -1,8 +1,9 @@
 <?php
 
 require_once __DIR__.'/../../core/init.php';
-/*
+
 $response = new Response();
+/*
 $emailService = new MailService($_CONFIG['EMAIL']);
 
 $emailService->setRecipents([

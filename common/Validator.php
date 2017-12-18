@@ -16,4 +16,12 @@ class Validator {
         return preg_match("/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/", $value);
     }
     
+
+    public static function isFileTypeMatch($expectedTypes, $filename){
+        $type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        if(!in_array($type,$expectedTypes)){
+            return false;
+        }
+        return true;
+    }
 }

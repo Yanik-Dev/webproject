@@ -12,30 +12,43 @@ else
 
 //checks if a file is posted thens uploads it
 if(isset($_FILES['file'])){
-    if(strcmp($_FILES['file']['name'], "") != 0){
+    if(count($_FILES['file']['name']) > 0){
         $result = $uploadService->uploadMultipleFiles($_FILES['file']);
         $status = false;
-        if(strcmp('', $result["uploadedFile"]) != 0){
-            $offering=new Image();
+        if(count($result["uploaded"]) > 0){
+            $images = [];
+            $offering = new Offering();
+            foreach($result["uploaded"] as $path)
+                $images[] = $path;
+           
             $offering->setId($_GET['id']??0);
-            $offering->setLogo($result["uploadedFile"]);
+            $offering->setImages($images);
             $updatedResult = OfferingService::insertImages($offering);
             $status = $updatedResult["status"];
         }
-        if(strcmp('', $result["uploadedFile"]) == 0 || !$status){
+        if(count($result["uploaded"]) < 0 || $status){
             $uploadService->removeFiles();
-        }else if(strcmp('', $updatedResult["path"]) !=0){
-            $uploadService->removeFile($updatedResult["path"]);
         }
-
         $response->setCode(ResponseCode::HTTP_OK);
         $response->setContent($status);
         $response->sendResponse();
         exit;
-
     }
+
+    
 }
  
+
+
+//get images
+if(isset($_GET['imagesforid'])){
+    $result =  OfferingService::findAll($_GET['imagesforid']);
+    $response->setCode(ResponseCode::HTTP_OK);
+  
+    $response->setContent($result);
+    $response->sendResponse();
+    exit;
+}
 
 //check if offering name is unique
 if(isset($_GET['name'])){
@@ -137,6 +150,7 @@ $description = Utility::sanitize($_POST['description']);
 $cost = Utility::sanitize($_POST['cost']);
 $businessId = Utility::sanitize($_POST['businessId']);
 $categoryId = Utility::sanitize($_POST['categoryId']);
+
 $token = $_POST['token'];
 
 //validation checks

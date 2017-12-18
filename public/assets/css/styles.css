@@ -9,6 +9,23 @@ body {
 body > #loginModule.grid, body > #registrationModule.grid {
     height: 100%;
 }
+footer{
+    height: 30px;
+    width: 100%;
+    background: rgb(54, 54, 54);
+    padding: 5px;
+    position: fixed;
+    bottom: 0px;
+}
+
+footer > span{
+    float: right;
+    color: #fff;
+}
+footer > a{
+    color: #fff;
+}
+
 #loginModule .column, #registrationModule .column {
     max-width: 450px;
 }

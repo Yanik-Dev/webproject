@@ -37,9 +37,9 @@ class OfferingService{
      * @return int
      */
     public static function update($offering){
-        $sql = "UPDATE offerings SET offering_name = ?, offering_cost = ?, offering_description = ?, fk_business_id=?, fk_offering_category_id=?, tags = ?, date_created = now() WHERE offering_id=?";
+        $sql = "UPDATE offerings SET offering_name = ?, offering_cost = ?, offering_description = ?, fk_business_id=?, fk_offering_category_id=?, date_created = now() WHERE offering_id=?";
         if( $statement = @Database::getInstance()->prepare($sql)){
-            @$statement->bind_param("sssiisi", $offering->getName(),
+            @$statement->bind_param("sssiii", $offering->getName(),
                                             $offering->getCost(),
                                             $offering->getDescription(),
                                             $offering->getBusiness()->getId(),
@@ -58,6 +58,29 @@ class OfferingService{
    
 
     /**
+     * inserts images for an offering
+     * @param Offering $offering
+     * @return []
+     */
+    public static function insertImages($offering){
+        $path = "";
+        $images = $offering->getImages();
+        foreach($images as $image){
+            $sql = "INSERT INTO offering_images SET offering_image = ?, fk_offering_id = ? ";
+            if( $statement = @Database::getInstance()->prepare($sql)){
+                @$statement->bind_param("si", $image,
+                                              $offering->getId());
+                if(!$result = $statement->execute()){
+                 $offering = null;
+                }
+                
+            }
+            
+        }
+        
+    }
+
+    /**
      * updates/inserts a feature image for a specific offering record
      * @param Offering $offering
      * @return []
@@ -72,7 +95,7 @@ class OfferingService{
                     $path = $row["offering_image"];
                 }
             }
-            $sql = "UPDATE offering_image SET offering_image = ? WHERE offering_image_id = ? ";
+            $sql = "UPDATE offering_image SET offering_image = ? WHERE fk_offering_image_id = ? ";
             if( $statement = @Database::getInstance()->prepare($sql)){
                 @$statement->bind_param("si", $offering->getImages()->getImage(),
                                                 $offering->getId());
@@ -158,7 +181,7 @@ class OfferingService{
      * @param string $name
      * @return []
      */
-    public static function findAll($object, $pagination){
+    public static function findAll($object, $pagination=null){
 
         $i = 0;
         $dataSet = [];
@@ -172,19 +195,33 @@ class OfferingService{
                                         OR offering_category LIKE CONCAT('%', ?,'%') 
                                         OR offering_type LIKE CONCAT('%', ?,'%') 
                                         ORDER BY offering_id DESC
-                                        LIMIT ?,?
-        ";
+                                        ".((isset($pagination))?"LIMIT ?,?":"");
+    
         if($statement = @Database::getInstance()->prepare($sql)){
-            @$statement->bind_param("sssssssii",   $object->getBusiness()->getId(),
-                                                    $object->getBusiness()->getOwner()->getUserId(),
-                                                    $object->getName(),
-                                                    $object->getDescription(),
-                                                    $object->getCost(),
-                                                    $object->getCategory()->getCategory(),
-                                                    $object->getCategory()->getType()->getType(),
-                                                    $pagination["start"],
-                                                    $pagination["limit"]
-                                            );
+            if(isset($pagination)){
+                @$statement->bind_param("sssssssii",   
+                                            $object->getBusiness()->getId(),
+                                            $object->getBusiness()->getOwner()->getUserId(),
+                                            $object->getName(),
+                                            $object->getDescription(),
+                                            $object->getCost(),
+                                            $object->getCategory()->getCategory(),
+                                            $object->getCategory()->getType()->getType(),
+                                            $pagination["start"],
+                                            $pagination["limit"]
+                                    );
+            }else{
+                @$statement->bind_param("sssssss",   
+                                            $object->getBusiness()->getId(),
+                                            $object->getBusiness()->getOwner()->getUserId(),
+                                            $object->getName(),
+                                            $object->getDescription(),
+                                            $object->getCost(),
+                                            $object->getCategory()->getCategory(),
+                                            $object->getCategory()->getType()->getType()
+                                    );
+            }
+           
                                             if(!$statement->execute()){
                                                 echo "Execute failed: (" . $statement->errno . ") " . $statement->error;
                                                 exit;
@@ -240,7 +277,9 @@ class OfferingService{
         return $dataSet;
     }
 
-
+    /**
+     * 
+     */
     private static function _setData($item, $images){
         return [
             "id"=>$item['offering_id'],

@@ -1,8 +1,7 @@
 
 <?php 
  $title = "Account";
- include '../includes/header.php';
- include '../includes/admin-layout.php';
+ include '../../includes/admin-layout.php';
 
 $token = SecurityService::generateToken("crsf_token");
 
@@ -24,7 +23,7 @@ $token = SecurityService::generateToken("crsf_token");
             </div>
             </div>
         </div>
-        <img src="<?= ($session->getImage() !== null )?'./uploads/'.$session->getImage(): './assets/img/img-wireframe.png'?>">
+        <img src="<?= ($session->getImage() !== null )?'./../uploads/'.$session->getImage(): './../assets/img/img-wireframe.png'?>">
         </div>
         <div class="content">
             <div class="header"><?= strtoupper($session->getFirstname()).' '.strtoupper($session->getLastname())?></div>
@@ -44,14 +43,14 @@ $token = SecurityService::generateToken("crsf_token");
 
 
   <form class="ui large form account-details hide-element" 
-        action="./actions/account.php?option=changeinformation" 
+        action="./../actions/account.php?option=changeinformation" 
         method="post" >
     <div class="ui warning segment">
       <div class="ui inverted dimmer">
         <div class="ui text loader">Saving...</div>
       </div>
       <div  class="ui small image" style="margin-left: 30%">
-        <img src="<?= ($session->getImage() !== null )?'./uploads/'.$session->getImage(): './assets/img/img-wireframe.png'?>">
+        <img src="<?= ($session->getImage() !== null )?'./../uploads/'.$session->getImage(): './../assets/img/img-wireframe.png'?>">
         <div class="mini ui icon circular button" style="position: absolute; top:5px;right: 3px;">
             <i class="large upload icon"></i> 
             <input class="file-input"  type="file" name="file">
@@ -97,7 +96,7 @@ $token = SecurityService::generateToken("crsf_token");
   <div class="header">Change Password</div>
   <div class="content">
     <p>Once your password is changed you will required to login.</p>
-  <form class="ui large form password-form" action="./actions/account.php?option=changepassword" method="POST" >
+  <form class="ui large form password-form" action="./../actions/account.php?option=changepassword" method="POST" >
     <input type="hidden" name="firstname" value="<?=$session->getFirstname()?>">
     <input type="hidden" name="lastname" value="<?=$session->getLastname()?>">
     <input type="hidden" name="email" id="email" value="<?=$session->getEmail()?>">
@@ -248,7 +247,7 @@ $token = SecurityService::generateToken("crsf_token");
             $dimmer.addClass('active');
             $dimmer.find(".text.loader").text('Uploading');
             $.ajax({
-                url: './actions/account.php',
+                url: './../actions/account.php',
                 type: 'POST',
                 dataType: 'text',
                 contentType: false,
@@ -257,13 +256,6 @@ $token = SecurityService::generateToken("crsf_token");
                 success:function(data){
                     let result = JSON.parse(data);
                     window.location.href="./account.php";
-                    /*let image = 'assets/img/img-wireframe.png';
-                    if(result){
-                        image = e.target.result;  
-                    }
-                    imageViewer.attr('src', image); 
-                    $detailsCard.find('img').attr('src', image)
-                    $dimmer.removeClass('active');*/
                 },
                 error: ()=>{
 
@@ -287,14 +279,13 @@ $token = SecurityService::generateToken("crsf_token");
         return;
       }
       if($emailInput.val() == $('.special.cards .image').find('#email-content')){
-
           isEmailUnique = true;
           return;
       }
       $existErrorMsg.hide();
       $checkingEmailLoader.addClass("active");
       $.ajax({
-        url: './actions/register.php?email='+$emailInput[0].value,
+        url: './../actions/register.php?email='+$emailInput[0].value,
         dataType: 'text',
         type: 'get',
         contentType: 'application/x-www-form-urlencoded',

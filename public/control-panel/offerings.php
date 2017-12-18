@@ -1,40 +1,39 @@
 <?php 
  $title = "Offerings";
- include '../includes/header.php';
- include '../includes/admin-layout.php';
- include '../services/autoload.php';
+ include '../../includes/admin-layout.php';
+ include '../../services/autoload.php';
 
  $types = OfferingTypeService::findAll();
  $businesses = BusinessService::findAll($session->getUserId());
 ?>
-   <div class="ui page dimmer">
-       <div class="content" style="position:fixed">
-        <div class="center">
-        <h1>Click here to dismiss</h1>
+
+<div class="ui segment images hide-element"style="position:fixed;left: 5px; z-index:999999;display:none !important;width: 100%; height: 100% !important;">
+        <div>
+        <button class="ui primary labeled icon button" id="upload-btn">
+            <span>Upload Images</span> 
+            <i class="upload icon"></i>
+        </button>
+        <form enctype="multipart/form-data" style="display:none" action="upload.php" id="upload-form" method="post">
+         <input class="upload-input"  type="file" name="file[]" multiple >
+        </form>
+        <button class="ui red right floated labeled icon button close-image-view">
+            <span>Close</span> 
+            <i class="close icon"></i>
+        </button>
         </div>
+        <div class="ui horizontal divider">Preview </div>
+        <div class="ui small images" style="overflow-y:scroll" id="image-area">
+         
         </div>
-    </div>
-   <div class="ui container" id="offering-module">
-    <div class="ui right fixed vertical menu images hide-element"style="z-index:999999;display:none !important; height: 100% !important;overflow-y:scroll">
         
-        <a  class="item">
-            <button class="ui primary labeled icon button" id="upload">
-                <span>Upload Images</span> 
-                <i class="upload icon"></i>
-            </button>
-        </a>
-        <a class="item">
-            <button class="mini ui icon button circular close-modal-btn"  style="background-color:transparent; z-index:99;position: absolute; top:10px;right: 10px;" data-id="{{id}}">
-                <i class="large close icon"></i> 
-            </button>
-            <img class="ui large image" src="<?='./assets/img/300x300.png'?>">
-        </a>       
     </div> 
+  
+   <div class="ui container" id="offering-module">
+    
         <div class="ui centered padded grid">
             <div class="eight column" >
-
-              <div class="ui teal buttons">
-              <button class="ui teal labeled icon button" id="add-offering">
+              <div class="ui primary buttons">
+              <button class="ui  labeled icon button" id="add-offering">
                 <span>Add New Offering</span> 
                 <i class="add icon"></i>
               </button>
@@ -49,18 +48,18 @@
             </div>
         </div>
         <h6 class="ui horizontal divider header"></h6>
-       <div class=" ui padded centered four stackable cards" id="offerings">
+        <div class=" ui padded centered four stackable cards" id="offerings">
             
 
         </div>
         <div class="load-indicator centered ui grid" >
-                <div class="ui  icon message column" style="background-color:transparent; box-shadow:0 0 0 0 rgba(0,0,0,0) inset, 0 0 0 0 transparent !important;">
-                    <i class="notched circle loading icon"></i>
-                    <div class="content">
-                        <div class="header"></div>
-                    </div>
+            <div class="ui  icon message column" style="background-color:transparent; box-shadow:0 0 0 0 rgba(0,0,0,0) inset, 0 0 0 0 transparent !important;">
+                <i class="notched circle loading icon"></i>
+                <div class="content">
+                    <div class="header"></div>
                 </div>
             </div>
+        </div>
     </div>
 </div>
 <!-- close grid -->
@@ -72,12 +71,12 @@
         <i class="large close icon"></i> 
     </button>
     <div class="ui negative message hide-element" id="error-msg"></div>
-        <form action="" class="ui form">
+        <form action="" class="ui form offering">
         <h4 class="ui dividing header"><i class="building icon"></i> Offering Information</h4>
         <div class="sixteen wide field">
         <label>Offering Name</label>
-            <span class="ui hide-element" style="color: red" id="exist-msg"><i class="close icon"></i>Offering already exist.</span>
-            <input type="text" name="name" id="name" placeholder="">
+             <input type="text" name="name" id="name" placeholder="">
+             <span class="ui hide-element" style="color: red" id="exist-msg"><i class="close icon"></i>Offering already exist.</span>
         </div>
         <div class="eight wide field">
            <label>Cost</label>
@@ -120,7 +119,7 @@
         </div>
     </div>
     <input type="hidden" name="token" value="<?=SecurityService::generateToken("crsf_token");?>">
-    <input type="hidden" name="id" id="id" value="">
+    <input type="text" class="hide-element" name="id" id="id" value="">
     </form>
     <div class="actions">
     <div class="ui button close-modal-btn" >Cancel</div>
@@ -149,7 +148,7 @@
             <input type="file" name="file" id="file">
         </div>
    
-         <input type="hidden" name="token" value="<?=SecurityService::generateToken("crsf_token");?>">
+         <input type="hidden" name="token" value="<?=$token?>">
 
         <div class="actions">
             <button type="submit" class="ui approve button">Submit</button>
@@ -169,12 +168,11 @@
 
 <script type="text/template" id="offering-template">
 <div class="ui card main-card-content" id="offering-item-{{id}}">
-<div class="content">
-    <h4 id="name" data-id="{{id}}">{{name}}</h4>
-  </div>
+<!--<div class="content">
+  </div>-->
   <div class="ui slide masked reveal image">
 
-  <img class="ui image visible content"  src="./assets/img/img-wireframe.png">
+  <img class="ui image visible content"  src="{{image}}">
     <div class="hidden content" style="padding:5px;" >
         <p id="description">{{description}}</p>
     </div>
@@ -185,29 +183,38 @@
       <i class="heart outline like icon"></i>
       17 likes
     </span> -->
-    <b>Cost: <span id="cost">{{cost}}</span></b>
+
+    <h3 id="name" data-id="{{id}}" data-index="{{index}}">{{name}}</h3>
+    <b>Cost: <i class="dollar icon"></i> <span id="cost">{{cost}}</span></b>
     <div class="meta" id="category" data-categoryId="{{categoryId}}" data-typeId="{{typeId}}">{{category}}</div>
-    <div class="meta" id="offering" data-businessId ="{{businessId}}">{{businessName}}</div>
+    <div class="meta" id="business" data-businessId ="{{businessId}}">{{businessName}}</div>
   </div>
-    <div class="extra content">
-        <button class="ui icon button uploads">
+  <div class="ui three bottom attached buttons">
+    <button class="ui icon button uploads">
         <i class="photo icon"></i>
-        </button>
-        <button class="ui icon button edit">
+    </button>
+    <button class="ui primary icon button edit">
         <i class="edit icon"></i>
-        </button>
-        <button class="ui icon button">
+        Edit
+    </button>
+    <button class="ui icon primary button">
         <i class="building icon"></i>
-        </button>
-    </div>
-   <a class="ui bottom-left corner label">
-        <i class="remove icon"></i>
-   </a>
+    </button>
+  </div>
 </div>
 </script>
+
+<script type="text/template" id="image-template">
+     <div class="small centered image" style="position:relative">
+        <button class="mini ui icon button circular"  style=" z-index:99;position: absolute; top:5px;right: 0px" data-id="{{id}}">
+            <i class="large close icon"></i> 
+        </button>
+        <img class="ui large image" src="{{image}}">
+    </div>
+</script>
 <!-- ./offering item template -->
-<script src="./assets/js/app.module.js"></script>
-<script src="./assets/lib/jquery.jscroll.js"></script>
+<script src="./../assets/js/app.module.js"></script>
+<script src="./../assets/lib/jquery.jscroll.js"></script>
 
 <script>
 (function(){
@@ -217,23 +224,26 @@
         page: 1,
         limit: 10,
         total: 0,
+        isEnd: false
     }
     
     let previousName = null;
     let isNameUnique = false;
+    let offerings = [];
 
 
     //cache DOM elements
     let $el = $('#offering-module');
     let $offeringContianer = $('#offerings');
     let $nameInput = $('#name');
-    let $offeringForm = $('.ui.form');
+    let $offeringForm = $('.ui.form.offering');
     let $searchBar = $('#search-bar');
     let $offeringSubmitButton = $('#offering-submit-btn');
     let $addOfferingModal = $('.offering.modal');
     let $addOfferingButton = $('#add-offering');
     let offeringTemplate = $('#offering-template').html();
-    let $imageView = $('.vertical.menu.images');
+    let imageTemplate = $('#image-template').html();
+    let $imageView = $('.segment.images');
     let $existErrorMsg = $('#exist-msg');
     let $closeModal = $('.close-modal-btn');
     let $importModal = $('.import.modal');
@@ -243,21 +253,37 @@
     let $businessDropdown = $offeringForm.find('#businessId');
     let $selectedCardContent = null;
     let $loadIndicator = $el.find('.load-indicator');
-    let $contentDimmer = $('.page.dimmer:first').dimmer({
-        closable:true, 
-        onHide: ()=>{
-             $imageView.toggle();
-        }
-    });
+    let selectedId = null;
 
     //bind events
     $addOfferingButton.on('click', ()=>{ $addOfferingModal.modal('show'); });
     $('#import-btn').on('click', ()=>{
-        $importModal.modal('show');
+      $importModal.modal('show');
     })
-    $offeringContianer.delegate('button.uploads','click', ()=>{
+    $offeringContianer.delegate('button.uploads','click', function(){
+        selectedId = $(this).closest('.main-card-content').find('#name').attr("data-id");
         $imageView.toggle();
-        $contentDimmer.dimmer('toggle');
+        $imageView.find('#image-area').empty();
+        let index = $(this).closest('.main-card-content').find('#name').attr("data-index");
+        $.each(offerings[index].images,(i,image)=>{
+            let pic = {image:''};
+            pic.image = (image)?'./../uploads/'+image:'./../assets/img/img-wireframe.png';
+            $imageView.find('#image-area').append(Mustache.render(imageTemplate, pic));
+        });
+    })
+
+    $('button.close-image-view').on('click', function(){
+        $imageView.toggle();    
+        $imageView.find('#image-area').empty();       
+    })
+
+    //handles upload events
+    $('.upload-input').on('change', function(){
+        console.log('initiating upload')
+        _onUpload()
+    })
+    $('#upload-btn').on('click', function(){
+        $('.upload-input').trigger('click')
     })
     $nameInput.on('keyup', _checkIfNameExist);
     $businessDropdown.on('change', _checkIfNameExist);
@@ -266,19 +292,55 @@
     $searchBar.on('keyup', $.debounce(_getOfferingList, 300));
     $closeModal.on('click', ()=>{ _resetForm() });
     $typeDropdown.on('change', _getCategories);
-    $offeringSubmitButton.on('click', _insertOffering);
+    $offeringSubmitButton.on('click', _submitOffering);
     $('.description-textarea').keyup(function() {
-        var textLength = $(this).val().length;
-        var textRemaining = 255 - textLength;
-        $('#textarea-feedback span.remaining').html(textRemaining);
+      var textLength = $(this).val().length;
+      var textRemaining = 255 - textLength;
+      $('#textarea-feedback span.remaining').html(textRemaining);
     });
 
     $(window).scroll(function() {
-        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-            _getOfferingList();
-          
-        }
+      if ($(window).scrollTop() == $(document).height() - $(window).height() && !pagination.isEnd) {
+          _getOfferingList();
+      }
     });
+
+    function _onUpload(){
+        var filedata = $('.upload-input')[0],
+        formdata = false;
+        if (window.FormData) {
+            formdata = new FormData();
+        }
+        var i = 0, len = filedata.files.length, img, reader, file;
+        for (; i < len; i++) {
+            file = filedata.files[i];
+            if (window.FileReader) {
+                reader = new FileReader();
+                reader.onload = function(e) {
+                // showUploadedItem(e.target.result, file.fileName);
+                };
+                reader.readAsDataURL(file);
+            }
+            formdata.append("file", file);
+        }
+        var formData = new FormData($('#upload-form')[0]);
+        if (formdata) {
+            $.ajax({
+                url: "../../actions/offering.php?id="+selectedId,
+                type: "POST",
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    console.log(res)
+                },       
+                error: function(res) {
+
+                }       
+            });
+        }
+    }
 
 
     //init
@@ -384,21 +446,24 @@
             pagination.page = 0;
         }
         $.ajax({
-            url: '../../actions/offering.php?search='+q+'&page='+pagination.page+'&limit='+pagination.limit,
+            url: './../actions/offering.php?search='+q+'&page='+pagination.page+'&limit='+pagination.limit,
             type: 'get',
             dataType: 'json',
             success:function(data){
-               
+              
                 //$offeringContianer.empty();
                 if(data.length == 0 && q ==""){
                     $addOfferingButton.find("span").text("Add Your First Offering");
                     return;
                 }
+                if(data[0].endOfResults === true){
+                    $loadIndicator.hide();
+                    pagination.isEnd = true;
+                    return;
+                }
                 $.each(data,(i,offering)=>{
-
-              
-                    offering.image = (offering.image)?'./uploads/'+offering.image:'assets/img/img-wireframe.png';
-                    
+                    offering.image = (offering.image)?'./../uploads/'+offering.image:'./../assets/img/img-wireframe.png';
+                    offering.index = i;
                     $offeringContianer.append(Mustache.render(offeringTemplate, offering));
                     let $item = $offeringContianer.find('div.offering-item-'+offering.id);
                     $item.find('.ui.uploading.dimmer').addClass('active');
@@ -406,11 +471,9 @@
                     $images[i].on("load", ()=>{
                        // $images[i].closest('.segment').find('.ui.uploading.dimmer').removeClass('active');
                     })
+
+                    offerings.push(offering);
                 });
-                if(data[0].endOfResults === true){
-                    $loadIndicator.hide();
-                    return;
-                }
                 pagination.page++;
             },
             error: _onError
@@ -420,7 +483,7 @@
 
     function _getCategories(){
         $.ajax({
-          url: './actions/offering.php?type='+$typeDropdown.val(),
+          url: './../actions/offering.php?type='+$typeDropdown.val(),
           dataType: 'text',
           type: 'get',
           contentType: 'application/x-www-form-urlencoded',
@@ -438,7 +501,7 @@
                 if($selectedCardContent){
                     let categoryId = $selectedCardContent.find('div#category').attr('data-categoryId');
                     $offeringForm.find('select#categoryId').val(categoryId);
-                    $selectedCardContent = null;
+                    //$selectedCardContent = null;
                 }
                 
             }else{
@@ -451,14 +514,16 @@
 
     function _onEdit(){
         $selectedCardContent = $(this).closest('.main-card-content');
-        let name = $selectedCardContent.find('h4#name').text();
+        let name = $selectedCardContent.find('#name').text();
         let description = $selectedCardContent.find('p#description').text();
         let cost = $selectedCardContent.find('span#cost').text();
-        let businessId = $selectedCardContent.find('div#offering').attr('data-businessId');
+        let businessId = $selectedCardContent.find('div#business').attr('data-businessId');
         let typeId = $selectedCardContent.find('div#category').attr('data-typeId');
+        let id = $selectedCardContent.find('#name').attr('data-id');
         $offeringForm.find('input#name').val(name);
         $offeringForm.find('textarea#description').val(description);
         $offeringForm.find('input#cost').val(cost);
+        $offeringForm[0].id.value = id;
         $offeringForm.find('select#businessId').val(businessId);
         $offeringForm.find('select#typeId').val(typeId);
         $typeDropdown.trigger('change');
@@ -466,33 +531,57 @@
         $addOfferingModal.modal('show');
     }
 
+    function _onEditFinish(){
+        let name =  $offeringForm.find('input#name').val();
+        let description = $offeringForm.find('textarea#description').val();
+        let cost = $offeringForm.find('input#cost').val(); 
+        let businessId = $offeringForm.find('select#businessId').val(); 
+        let category = $offeringForm.find('select#categoryId option:selected').text();
+        let categoryId = $offeringForm.find('select#categoryId').val();
+        $selectedCardContent.find('#name').text(name)
+        $selectedCardContent.find('p#description').text(description);
+        $selectedCardContent.find('span#cost').text(cost);
+        $selectedCardContent.find('div#business').attr('data-businessId', businessId);
+        $selectedCardContent.find('div#category').attr('data-typeId', categoryId);
+        $selectedCardContent.find('div#category').text(category);
+        _resetForm();
+    }
+
     function _resetForm(){
         $offeringForm[0].reset();   
         $offeringForm.find('.error').removeClass('error');
         $offeringForm.find('.ui.basic.red.pointing.prompt.label').remove();
         $('#textarea-feedback span.remaining').html(255);
+        $existErrorMsg.hide();
         $addOfferingModal.modal('hide'); 
     }
 
-    function _insertOffering(){
-        if( !$offeringForm.form('is valid')  || !isNameUnique){
+    function _submitOffering(){
+
+        if(previousName == $offeringForm.find('input#name').val()){
+            isNameUnique = true;
+        }
+        if( !$offeringForm.form('is valid')  ||  !isNameUnique){
             $offeringForm.form('validate form')
             return;
         }
         $.ajax({
-            url: '../../actions/offering.php',
+            url: './../actions/offering.php',
             dataType: 'text',
             type: 'post',
             contentType: 'application/x-www-form-urlencoded',
             data: $offeringForm.serialize(),
             success: (response)=>{
                 console.log(response);
+                if($offeringForm[0].id.value > 0){
+                    _onEditFinish()
+                }
             },
             error: _onError
         })
     }
 
-    function _checkIfNameExist(event){
+    function _checkIfNameExist(){
         if( !$offeringForm.form('is valid', "name") ){
           return;
         }
@@ -504,10 +593,10 @@
             isNameUnique = true;
             return;
         }
-
+        
         $checkingNameLoader.addClass("active");
         $.ajax({
-          url: './actions/offering.php?businessId='+businessId+'&name='+$nameInput[0].value,
+          url: './../actions/offering.php?businessId='+businessId+'&name='+$nameInput[0].value,
           dataType: 'text',
           type: 'get',
           contentType: 'application/x-www-form-urlencoded',

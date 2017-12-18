@@ -1,18 +1,9 @@
 <?php
 $title = "Import";
-include '../includes/header.php';
-include '../includes/admin-layout.php';
+include '../../includes/admin-layout.php';
 
-require_once '../lib/PHPExcel/PHPExcel.php';
-require_once '../lib/PHPExcel/PHPExcel/IOFactory.php';
-
-
-$path= $_FILES['file']["tmp_name"]??'';
-$businessId = $_POST["businessId"]??'';
-
-if($path=='' || !is_numeric($businessId)){
-    header('Location: ./offerings.php');
-}
+require_once '../../lib/PHPExcel/PHPExcel.php';
+require_once '../../lib/PHPExcel/PHPExcel/IOFactory.php';
 
 //declarations
 $table = $categories = $errors = $offerings = [];
@@ -22,58 +13,72 @@ $business =new Business();
 $category=new OfferingCategory();
 $offering=new Offering();
 
-//set Category Object
-$category->setId('');
-$category->setType(new OfferingType());
+$path= $_FILES['file']["tmp_name"]??'';
+$businessId = $_POST["businessId"]??'';
 
-//set Business Object
-$business->setId($businessId);
-$business->setOwner(new User());
-
-//set Offering Object
-$offering->setName('');
-$offering->setCost('');
-$offering->setDescription('');
-$offering->setBusiness($business);
-$offering->setCategory($category);
-
-$offeringsList = OfferingService::findAll($offering, ['start'=>0,'limit'=>0]);
-$categoriesList = OfferingCategoryService::findAll();
-
-
-foreach($offeringsList as $offering){
-    $offerings[] = strtolower($offering["name"]);
-}
-foreach($categoriesList as $category){
-    $categories[] = $category["category"];
+if($path=='' || !is_numeric($businessId)){
+    header('Location: ./offerings.php');
 }
 
-try{
-    $objPHPExcel = PHPExcel_IOFactory::load($path);
-}catch(Exception $e){
-    $errors[] = $e->getMessage();
-    $objPHPExcel = null;
+if(!Validator::isFileTypeMatch(['xls', 'csv', 'xlsx' ], $_FILES['file']["type"])){
+    $errors[] = "Only .xls, .xlsx and .csv files are allowed";
 }
-if(isset($objPHPExcel)){
-    foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
-        $worksheetTitle     = $worksheet->getTitle();
-        $highestRow         = $worksheet->getHighestRow();
-        $rowCount           = $highestRow;
-        $highestColumn      = $worksheet->getHighestColumn(); 
-        $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
-        $nrColumns          = ord($highestColumn) - 64;
-        if($worksheetTitle != "Items"){
-            $errors[] = "Items worksheet not found";
-            break;
-        }else{
-            for ($row = 1; $row <= $highestRow; ++ $row) {
-                for ($col = 0; $col < $highestColumnIndex; ++ $col) {
-                    $cell = $worksheet->getCellByColumnAndRow($col, $row);
-                    $val = $cell->getValue();
-                    $table[$row][$col] = $val;
+
+
+if(count($errors) == 0){
+
+    //set Category Object
+    $category->setId('');
+    $category->setType(new OfferingType());
+
+    //set Business Object
+    $business->setId($businessId);
+    $business->setOwner(new User());
+
+    //set Offering Object
+    $offering->setName('');
+    $offering->setCost('');
+    $offering->setDescription('');
+    $offering->setBusiness($business);
+    $offering->setCategory($category);
+
+    $offeringsList = OfferingService::findAll($offering);
+    $categoriesList = OfferingCategoryService::findAll();
+
+    foreach($offeringsList as $o){
+        $offerings[] = strtolower($o["name"]);
+    }
+    foreach($categoriesList as $category){
+        $categories[] = $category["category"];
+    }
+
+    try{
+        $objPHPExcel = PHPExcel_IOFactory::load($path);
+    }catch(Exception $e){
+        $errors[] = $e->getMessage();
+        $objPHPExcel = null;
+    }
+    if(isset($objPHPExcel)){
+        foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+            $worksheetTitle     = $worksheet->getTitle();
+            $highestRow         = $worksheet->getHighestRow();
+            $rowCount           = $highestRow;
+            $highestColumn      = $worksheet->getHighestColumn(); 
+            $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+            $nrColumns          = ord($highestColumn) - 64;
+            if($worksheetTitle != "Items"){
+                $errors[] = "Items worksheet not found";
+                break;
+            }else{
+                for ($row = 1; $row <= $highestRow; ++ $row) {
+                    for ($col = 0; $col < $highestColumnIndex; ++ $col) {
+                        $cell = $worksheet->getCellByColumnAndRow($col, $row);
+                        $val = $cell->getValue();
+                        $table[$row][$col] = $val;
+                    }
                 }
+                break;
             }
-            break;
         }
     }
 }
@@ -165,9 +170,9 @@ if(isset($objPHPExcel)){
 
                         
                             foreach($categoriesList as $c){
-                                if($c["category"] == $table[$row][3] ){
+                                if($c["category"] == $table[$row][4] ){
                                     //set Category Object
-                                    $category->setId($categoryId);
+                                    $category->setId($c["id"]);
                                     break;
                                 }
                             }
@@ -180,7 +185,10 @@ if(isset($objPHPExcel)){
                             $newOffering->setDescription($table[$row][1]);
                             $newOffering->setBusiness($business);
                             $newOffering->setCategory($category);
-                            $successCount++;
+                            $id = OfferingService::insert($newOffering);
+                            if($id){
+                                $successCount++;
+                            }
                         }elseif(!$isEmpty){
                             $failedCount++;
                         }

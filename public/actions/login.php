@@ -19,7 +19,6 @@ if(isset($_GET['logout'])){
     exit;
 }
 
-
 //validation checks
 if(!isset($_POST['token'])){
     $errors[] = "missing token";

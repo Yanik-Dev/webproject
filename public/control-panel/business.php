@@ -1,7 +1,6 @@
 <?php 
  $title = "Business-List";
- include '../includes/header.php';
- include '../includes/admin-layout.php';
+ include '../../includes/admin-layout.php';
 ?>
    <div class="ui container">
         <div class="ui centered padded grid">
@@ -30,8 +29,8 @@
     <h4 class="ui dividing header"><i class="building icon"></i> Business Information</h4>
     <div class="sixteen wide field">
       <label>Business Name</label>
-        <span class="ui hide-element" style="color: red" id="exist-msg"><i class="close icon"></i>Business already exist.</span>
         <input type="text" name="name" id="name" placeholder="">
+        <span class="ui hide-element" style="color: red" id="exist-msg"><i class="close icon"></i>Business already exist.</span>
       </div>
     <div class="sixteen wide field">
         <label>Business Description</label>
@@ -150,7 +149,7 @@
                     <img src="{{logo}}">
                     <div class="mini ui icon button circular" style="position: absolute; top:5px;right: 3px;">
                         <i class="large upload icon"></i> 
-                        <input class="file-input"  type="file" name="file">
+                        <input class="file-input"  type="file" name="file" >
                     </div>
                 </div>
                 <div class="content">
@@ -187,7 +186,7 @@
         <div class="ui uploading inverted dimmer">
           <div class="ui indeterminate text loader">Uploading</div>
         </div>
-        <div class="ui mini bottom attached error message hide-element">
+        <div class="ui mini bottom attached error upload message hide-element">
           <i class="close icon"></i>
           <span></span>
         </div>
@@ -195,7 +194,7 @@
 </div> 
 </script>
 <!-- ./business item template -->
-<script src="./assets/js/app.module.js"></script>
-<script src="./assets/js/business.module.js"></script>
+<script src="./../assets/js/app.module.js"></script>
+<script src="./../assets/js/business.module.js"></script>
 
 

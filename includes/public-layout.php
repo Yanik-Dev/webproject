@@ -2,7 +2,6 @@
 
   require '../services/autoload.php';
   //check if user is already logged in
-  $session = SessionService::getActiveSession("user");
   if( $session !== null){
     if(strtolower($title) =="login" || strtolower($title) =="register"){
       header("Location: ./index.php");
@@ -10,6 +9,7 @@
     }
   }
   $token = SecurityService::generateToken("token");
+  $crsfToken = SecurityService::generateToken("crsf_token");
 ?>
   <script>
   $(document)
@@ -45,7 +45,7 @@
 <div class="ui flowing basic popup">
 
 <div class="column">
- <a class="item header" href="./businesslistings.php">All <i class="angle right icon"></i></a>  
+ <a class="item header" href="./business.php">All <i class="angle right icon"></i></a>  
  </div>
   <div class="ui three column relaxed divided grid">
     <div class="column">
@@ -84,7 +84,7 @@
       Sign Up
     </a>
   <?php else: ?>
-    <a class="browse icon item" href="./my-business.php">
+    <a class="browse icon item" href="./control-panel/business.php">
       <i class="large list icon"></i> 
     </a>
     <a class="browse icon item" href="../actions/login.php?logout=yes&token=<?=$token?>&page=<?=$title?>">

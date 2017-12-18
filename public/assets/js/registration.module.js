@@ -22,6 +22,7 @@ let RegistrationModule = (function(){
     $('.ui.radio.checkbox').checkbox();
     $registrationForm.form({
         on: 'blur',
+        inline:true,
         fields: {
             email: {
               identifier: 'email',
@@ -37,7 +38,7 @@ let RegistrationModule = (function(){
               rules: [
                 {
                   type   : 'minLength[2]',
-                  prompt : 'Your firstname must be at least {ruleValue} characters'
+                  prompt : 'First name must be at least {ruleValue} characters'
                 }
               ]
             },
@@ -46,7 +47,7 @@ let RegistrationModule = (function(){
               rules: [
                 {
                   type   : 'minLength[2]',
-                  prompt : 'Your lastname must be at least {ruleValue} characters'
+                  prompt : 'Lastname must be at least {ruleValue} characters'
                 }
               ]
             },
@@ -132,12 +133,13 @@ let RegistrationModule = (function(){
       $existErrorMsg.hide();
       $checkingEmailLoader.addClass("active");
       $.ajax({
-        url: './actions/register.php?email='+$emailInput[0].value,
+        url: './actions/register.php?email='+$emailInput.val(),
         dataType: 'text',
         type: 'get',
         contentType: 'application/x-www-form-urlencoded',
         success: function(data){
           $checkingEmailLoader.removeClass("active");
+          console.log(data)
           let result = JSON.parse(data);
           if(result){
             $existErrorMsg.show();

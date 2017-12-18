@@ -8,6 +8,7 @@ class Offering{
     private $tags;
     private $business;
     private $category;
+    private $images;
     private $dateCreated;
 
 
@@ -18,6 +19,7 @@ class Offering{
     public function getTags() { return $this->tags; }
     public function getBusiness(){ return $this->business;}
     public function getCategory(){ return $this->category; }
+    public function getImages(){ return $this->images; }
     public function getDateCreated(){ return $this->dateCreated; }
 
     public function setId($id){ $this->id = $id; }
@@ -27,6 +29,7 @@ class Offering{
     public function setTags($tags){ $this->tags = $tags; }
     public function setCategory($category){ $this->category = $category; }
     public function setBusiness($business){ $this->business = $business; }
+    public function setImages($images){ $this->images = $images; }
     public function setDateCreated($date){ $this->dateCreated = $date; }
 
 }

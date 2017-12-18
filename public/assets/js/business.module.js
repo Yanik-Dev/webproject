@@ -126,12 +126,15 @@ let BusinessModule = (function($){
     //events handlers  
     function _onUpload(){
         
-        $uploadErrorMsg.addClass("hide-element");
         let imgPath = $(this)[0].value;
         let $this = $(this);
+        console.log($this);
+        return;
         let $container = $this.closest('div.segment-cell')
         let $dimmer = $container.find('.ui.uploading.dimmer');
         let $uploadErrorMsg = $container.find('.mini.bottom.attached.error.message');
+
+        $uploadErrorMsg.addClass("hide-element");
         let ext = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
         if ($this[0].files[0].size > 2000000 || $this[0].files[0].fileSize > 2000000){
             $uploadErrorMsg.find('span').text("File cannot exceed 2MB.");
@@ -160,7 +163,7 @@ let BusinessModule = (function($){
             $dimmer.addClass('active');
             $dimmer.find(".text.loader").text('Uploading');
             $.ajax({
-                url: '../../actions/business.php?id='+$this.closest('.item').find('.editBtn').attr("data-id"),
+                url: './../actions/business.php?id='+$this.closest('.item').find('.editBtn').attr("data-id"),
                 type: 'POST',
                 dataType: 'text',
                 contentType: false,
@@ -216,9 +219,9 @@ let BusinessModule = (function($){
         $businessForm[0].reset();   
         $businessForm.find('.error').removeClass('error');
         $businessForm.find('.ui.basic.red.pointing.prompt.label').remove();
-        
         $('#textarea-feedback span.remaining').html(255);
         $modal.modal('hide'); 
+        $existErrorMsg.hide();
     }
 
     function _onDelete(){
@@ -233,7 +236,7 @@ let BusinessModule = (function($){
             },
             onApprove : function() {
                 $.ajax({
-                    url: '../../actions/business.php?delete='+$id,
+                    url: './../actions/business.php?delete='+$id,
                     type: 'get',
                     dataType: 'text',
                     success:function(data){
@@ -257,12 +260,15 @@ let BusinessModule = (function($){
     }
 
     function _registerBusiness(){
-        if( !$businessForm.form('is valid')  || exist){
+        if(previousName == $nameInput[0].value && formElements.$id.value > 0 ){
+            isEmailUnique = true;
+        }
+        if( !$businessForm.form('is valid')  || !isEmailUnique){
             $errorMsg.hide();
             return;
         }
         $.ajax({
-            url: '../../actions/business.php',
+            url: './../actions/business.php',
             dataType: 'text',
             type: 'post',
             contentType: 'application/x-www-form-urlencoded',
@@ -278,7 +284,7 @@ let BusinessModule = (function($){
         if(result.status == 200){
             let business = result.content;
             if(formElements.$id.value > 0){
-               $selectedElement.find('span.qrcode').html('./uploads/'+business.contactQrCode);
+               $selectedElement.find('span.qrcode').html('./../uploads/'+business.contactQrCode);
                 _onEditFinish();
             }else{
                  //limit the number of characters shown for the description
@@ -290,8 +296,8 @@ let BusinessModule = (function($){
                     }
                     return ret;
                 }
-                business.logo = (business.logo)?'./uploads/'+business.logo:'assets/img/img-wireframe.png';
-                business.contactQrCode = (business.contactQrCode)?'./uploads/'+business.contactQrCode:'';
+                business.logo = (business.logo)?'./../uploads/'+business.logo:'./../assets/img/img-wireframe.png';
+                business.contactQrCode = (business.contactQrCode)?'./../uploads/'+business.contactQrCode:'';
                 $businesses.append(Mustache.render(businessTemplate, business));
             }
             $errorMsg.hide();  
@@ -353,7 +359,7 @@ let BusinessModule = (function($){
         let q = (this.value)?this.value.trim():'';
         let $images = [];
         $.ajax({
-            url: '../../actions/business.php?search='+q+'&page='+pagination.page+'&limit='+pagination.limit,
+            url: './../actions/business.php?search='+q+'&page='+pagination.page+'&limit='+pagination.limit,
             type: 'get',
             dataType: 'json',
             success:function(data){
@@ -375,8 +381,8 @@ let BusinessModule = (function($){
                         return ret;
                     }
 
-                    business.logo = (business.logo)?'./uploads/'+business.logo:'assets/img/img-wireframe.png';
-                    business.contactQrCode = (business.contactQrCode)?'./uploads/'+business.contactQrCode:'';
+                    business.logo = (business.logo)?'./../uploads/'+business.logo:'./../assets/img/img-wireframe.png';
+                    business.contactQrCode = (business.contactQrCode)?'./../uploads/'+business.contactQrCode:'';
                     $businesses.append(Mustache.render(businessTemplate, business));
                     let $item = $businesses.find('div.business-item-'+business.id);
                     $item.find('.ui.uploading.dimmer').addClass('active');
@@ -406,7 +412,7 @@ let BusinessModule = (function($){
 
         $checkingNameLoader.addClass("active");
         $.ajax({
-          url: './actions/business.php?name='+$nameInput[0].value,
+          url: './../actions/business.php?name='+$nameInput[0].value,
           dataType: 'text',
           type: 'get',
           contentType: 'application/x-www-form-urlencoded',
@@ -422,9 +428,6 @@ let BusinessModule = (function($){
           },
           error: _onError
         });
-      }
-
-    //expose functions and properties to outside world
-    return{
     }
+
 })(jQuery);
