@@ -47,7 +47,7 @@
 <div class="column">
  <a class="item header" href="./business.php">All <i class="angle right icon"></i></a>  
  </div>
-  <div class="ui three column relaxed divided grid">
+ <!-- <div class="ui three column relaxed divided grid">
     <div class="column">
       <h4 class="ui header">Services</h4>
       <div class="ui link list">
@@ -73,7 +73,7 @@
         <a class="item">Non Profit Management</a>
       </div>
     </div>
-  </div>
+  </div>-->
 </div>
   <div class="right menu">
   <?php if($session == null): ?>

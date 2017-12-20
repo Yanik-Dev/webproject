@@ -107,16 +107,8 @@ let RegistrationModule = (function(){
     }
 
     function _onSuccess(data){
-      console.log(data)
-        let result = JSON.parse(data);
-        if(result.status == 200){
            $errorMsg.hide();
            location.href=".././success.php";
-        }else{
-            $errorMsg.text("An unexpected error as occured.");
-            $errorMsg.show();
-        }
-        $registerLoader.removeClass("active");
     }
 
     function _onError( jqXhr, textStatus, errorThrown ){

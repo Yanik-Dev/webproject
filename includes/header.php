@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+require '../common/Database.php';
 require '../services/autoload.php';
 
 $session = SessionService::getActiveSession("user");

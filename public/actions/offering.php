@@ -5,7 +5,7 @@ $uploadService = new UploadService($_CONFIG["UPLOAD"]["DIRECTORY"]);
 $response = new Response();
 $errors = [];
 
-if(SessionService::getActiveSession("user"))
+if(SessionService::getActiveSession("user") != null)
     $ownerId = SessionService::getActiveSession("user")->getUserId();
 else
     $ownerId = '';
@@ -132,12 +132,12 @@ if(isset($_GET["page"])){
     }
 
     $start = ($currentPage - 1) * $limit;
-
     $result = OfferingService::findAll($offering, [
-                                                    'start'=>$start,
-                                                    'limit'=>$limit,
-                                                    'end'=>$endOfResult
-                                                  ]);
+        'start'=>$start,
+        'limit'=>$limit,
+        'end'=>$endOfResult
+        ]);
+
     $response->setCode(ResponseCode::HTTP_OK);
     $response->setContent($result);
     $response->sendResponse();

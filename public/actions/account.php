@@ -3,10 +3,13 @@
 require_once __DIR__.'/../../core/init.php';
 
 $uploadService = new UploadService($_CONFIG["UPLOAD"]["DIRECTORY"]);
+$emailService = new MailService($_CONFIG['EMAIL']);
 $response = new Response();
 $errors = [];
 
-$id = SessionService::getActiveSession("user")->getUserId();
+if(SessionService::getActiveSession('user') !== null){
+    $id = SessionService::getActiveSession("user")->getUserId()??0;
+}
 
 //checks if a file is posted thens uploads it
 if(isset($_FILES['file'])){
@@ -19,7 +22,7 @@ if(isset($_FILES['file'])){
             $user->setImage($result["uploadedFile"]);
 
             Utility::createThumbnail($_CONFIG["UPLOAD"]["DIRECTORY"].$result["uploadedFile"],
-                                        $_CONFIG["UPLOAD"]["DIRECTORY"].$result["uploadedFile"], 290);
+                                        $_CONFIG["UPLOAD"]["DIRECTORY"].$result["uploadedFile"], 290, 290);
             $updatedResult = UserService::updateImage($user);
             $status = $updatedResult["status"];
         }
@@ -69,6 +72,32 @@ if(!isset($_GET['option'])){
 $option = $_GET['option'];
 
 
+//reset password option
+if($option == "changepassword"){
+    $password = trim(strip_tags($_POST['password']));
+    $passwordConfirm = trim(strip_tags($_POST['confirmPassword']));
+    $id = $_GET["id"];
+
+    if($password == "" || strlen($password) < 8){
+        $error[] = "password cannot be least than 8 letters";
+    }else{
+        if($password != $passwordConfirm){
+            $error[] = "passwords do not match.";
+        }
+    }
+
+    $user = new User();
+    $user->setUserId($id);
+    $user->setSalt(SecurityService::getSalt());
+    $hash = SecurityService::getHash($password, $user->getSalt());
+    $user->setPassword($hash);
+    if(UserService::changePassword($user)){
+        header("Location: ../login.php");
+        exit;
+    }
+
+}
+
 //get posted values
 $firstname = Utility::sanitize($_POST['firstname']);
 $lastname = Utility::sanitize($_POST['lastname']);
@@ -82,27 +111,6 @@ if(!isset($token)){
     if(strcmp(SecurityService::getToken("crsf_token"), $token)!= 0){
         $errors[] = "tokens do not match";
     }  
-}
- 
-if($option == "changepassword"){
-    $password = trim(strip_tags($_POST['password']));
-    $passwordConfirm = trim(strip_tags($_POST['confirmPassword']));
-
-    if($password == "" || strlen($password) < 8){
-        $error[] = "password cannot be least than 8 letters";
-    }else{
-        if($password != $passwordConfirm){
-            $error[] = "passwords do not match.";
-        }
-    }
-
-    if(count($errors) > 0){
-        $response->setCode(ResponseCode::HTTP_BAD_REQUEST);
-        $response->setErrors($errors);
-        $response->sendResponse();
-        exit;
-    }
-
 }
 
 
@@ -146,7 +154,6 @@ if(isset($id)){
     header('Location: ./../control-panel/account.php');
     exit;
 }else{
-
     header('Location: ./../control-panel/account.php');
     exit;
 }

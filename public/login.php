@@ -2,10 +2,24 @@
 $title = "Login";
 include '../includes/header.php';
 include '../includes/public-layout.php';
+$isReset = false;
+
+if(isset($_GET['reset'])){
+  if($_GET['reset']==true){
+    $isReset = true;
+  }
+}
 ?>
   <div class="ui middle aligned center aligned grid" id="loginModule">
     <div class="column">
-
+    <?php if($isReset):?>
+     <div class="ui success message">
+      <i class="close icon"></i>
+      <div class="header">
+        Your request has been sent to your email.
+      </div>
+    </div>
+    <?php endif; ?>
       <h2 class="ui teal image header">
         <div class="content ">
           <img style="width: 150px;" src="./assets/img/blookup-logo.png" alt="">
@@ -49,6 +63,9 @@ include '../includes/public-layout.php';
   <div class="ui mini modal password-modal">
     <div class="header">Request Password Change</div>
     <div class="content">
+    <div class="ui  inverted dimmer">
+      <div class="ui text loader">Processing</div>
+    </div>
       <form class="ui large form password-form" method="POST" >
         <div class="field">
           <label>Email</label>

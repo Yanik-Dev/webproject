@@ -6,6 +6,30 @@
  */
 class OfferingService{
 
+    /**
+     * view not working on shared hosting 
+     * so I extracted the code 
+     */
+    private static $offeringViewCode ="SELECT 
+    `offerings`.`offering_id` AS `offering_id`,
+    `offerings`.`fk_business_id` AS `fk_business_id`,
+    `offerings`.`offering_name` AS `offering_name`,
+    `businesses`.`business_name` AS `business_name`,
+    `businesses`.`fk_user_id` AS `fk_user_id`,
+    `offerings`.`offering_cost` AS `offering_cost`,
+    `offerings`.`offering_description` AS `offering_description`,
+    `offerings`.`fk_offering_category_id` AS `fk_offering_category_id`,
+    `offerings`.`date_created` AS `date_created`,
+    `offering_categories`.`offering_category_id` AS `offering_category_id`,
+    `offering_categories`.`offering_category` AS `offering_category`,
+    `offering_categories`.`fk_offering_type_id` AS `fk_offering_type_id`,
+    `offering_types`.`offering_type_id` AS `offering_type_id`,
+    `offering_types`.`offering_type` AS `offering_type`
+FROM
+    (((`offerings`
+    JOIN `offering_categories` ON ((`offering_categories`.`offering_category_id` = `offerings`.`offering_id`)))
+    JOIN `offering_types` ON ((`offering_types`.`offering_type_id` = `offering_categories`.`fk_offering_type_id`)))
+    JOIN `businesses` ON ((`businesses`.`business_id` = `offerings`.`fk_business_id`)))";
     
     /**
      * create a offering 
@@ -182,18 +206,17 @@ class OfferingService{
      * @return []
      */
     public static function findAll($object, $pagination=null){
-
         $i = 0;
         $dataSet = [];
         $imageDataSet = [];
-        $sql = "SELECT * FROM v_offerings WHERE 
+        $sql = self::$offeringViewCode." WHERE 
                                         fk_business_id LIKE CONCAT('%', ?,'%') 
-                                        OR fk_user_id LIKE CONCAT('%', ?,'%') 
-                                        OR offering_name LIKE CONCAT('%', ?,'%') 
+                                        AND fk_user_id LIKE CONCAT('%', ?,'%') 
+                                        AND offering_name LIKE CONCAT('%', ?,'%') 
                                         OR offering_description LIKE CONCAT('%', ?,'%') 
                                         OR offering_cost LIKE CONCAT('%', ?,'%') 
-                                        OR offering_category LIKE CONCAT('%', ?,'%') 
-                                        OR offering_type LIKE CONCAT('%', ?,'%') 
+                                        AND offering_category_id LIKE CONCAT('%', ?,'%') 
+                                        AND fk_offering_type_id LIKE CONCAT('%', ?,'%') 
                                         ORDER BY offering_id DESC
                                         ".((isset($pagination))?"LIMIT ?,?":"");
     
@@ -205,8 +228,8 @@ class OfferingService{
                                             $object->getName(),
                                             $object->getDescription(),
                                             $object->getCost(),
-                                            $object->getCategory()->getCategory(),
-                                            $object->getCategory()->getType()->getType(),
+                                            $object->getCategory()->getId(),
+                                            $object->getCategory()->getType()->getId(),
                                             $pagination["start"],
                                             $pagination["limit"]
                                     );
@@ -239,9 +262,11 @@ class OfferingService{
                         }
                     }
                     $dataSet[] =  self::_setData($row, $imageDataSet);
-                    $dataSet[$i]["endOfResults"] = $pagination["end"];
                     $i++;
                 }
+                    $dataSet[0]["endOfResults"] = $pagination["end"];
+                
+
                 
             }
         }
@@ -256,7 +281,7 @@ class OfferingService{
     public static function findOne($id){
         $dataSet = [];
         $imageDataSet = [];
-        if($statement = @Database::getInstance()->prepare("SELECT * FROM v_offerings WHERE offering_id = ?")){
+        if($statement = @Database::getInstance()->prepare(self::$offeringViewCode." WHERE offering_id = ?")){
             @$statement->bind_param("i", $id);
             $statement->execute();
             if($rows = $statement->get_result()){
@@ -304,5 +329,6 @@ class OfferingService{
             "endOfResults"=>false
         ];
     }
+
 
 }

@@ -31,7 +31,7 @@ $token = $_POST['token'];
 if(!isset($token)){
     $errors[] = "missing token";
 }else{
-    if(strcmp(SecurityService::getToken("crsf_token"), $token)== 0){
+    if(strcmp(SecurityService::getToken("crsf_token"), $token) != 0){
         $errors[] = "tokens do not match";
     }  
 }
@@ -89,7 +89,7 @@ if(isset($id)){
         ]
     ]);
     $emailService->setSubject('Your Blookup account has been created.');
-    $emailService->setBody("Welcome "+(($user->getGender()=='Male')?'Mr':'Ms')+" "+$user->getLastname()+", thank you for resgistering to the blookup. To log into your account click here: "+$_SERVER['SERVER_NAME']+"/login.php");
+    $emailService->setBody("Welcome ".(($user->getGender()=='Male')?'Mr':'Ms')." ".$user->getLastname().", thank you for resgistering to the blookup. To log into your account click here: ".$_SERVER['SERVER_NAME']."/login.php");
     $emailService->sendMail();
     $response->sendResponse();
 }else{

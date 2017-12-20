@@ -1,4 +1,3 @@
-
 <?php 
 session_start();
 ini_set('display_errors', 1);
@@ -10,6 +9,11 @@ require '../../services/autoload.php';
 require '../../models/autoload.php';
 
 $session = SessionService::getActiveSession("user");
+//check if user is already logged in
+if( $session == null){
+  header("Location: ../login.php");
+  exit;
+}
 ?>
 <!DOCTYPE html>
 <html>

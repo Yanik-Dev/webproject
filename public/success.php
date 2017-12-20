@@ -1,7 +1,7 @@
 <?php 
  $title = "Home";
  include '../includes/header.php';
- include '../includes/public-nav.php';
+ include '../includes/public-layout.php';
 ?>
 <div class="ui middle aligned centered aligned grid" id="registrationModule">
   <div class="column">
@@ -12,7 +12,7 @@
         You have been successfully registered...
         <p class="sub header">Please proceed to verify your email address.</p>
         <br />
-        <button class="ui button">Proceed to Login</button>
+        <a class="ui button" href="./login.php">Proceed to Login</a>
     </div>
     </h2>
   </div>

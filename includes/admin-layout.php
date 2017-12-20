@@ -1,26 +1,24 @@
 <?php 
-
-  include '../../includes/panel-header.php';
-  //check if user is already logged in
-  if( $session == null){
-      header("Location: ../login.php");
-      exit;
-  }
-  $token = SecurityService::generateToken("token");
+include '../../includes/panel-header.php';
   
+  $token = SecurityService::generateToken("token");
+  $image = null;
+  if(trim($session->getImage()) != ''){
+    $image = $session->getImage();
+  }
 ?>
 </head>
 
   <div class="ui left inline vertical sidebar menu uncover">
         <div class="item sidebar-header" style="">
-            <img class="ui  tiny circular image" src="<?='./../uploads/'.$session->getImage()??'./../assets/img/300x300.png'?>">
+            <img class="ui  tiny circular image" src="<?='./../uploads/'.($image??'./../assets/img/300x300.png')?>">
             <span class="header"><?= strtoupper($session->getFirstname()).' '.strtoupper($session->getLastname())?></span>
         </div>
        <div class="item">
             <a class="header" href="./offerings.php">Offerings</a>
             <div class="menu">
-            <a class="item">Products</a>
-            <a class="item">Services</a>
+           <!-- <a class="item">Products</a>
+            <a class="item">Services</a> -->
             </div>
         </div>
          <div class="item">
@@ -93,6 +91,7 @@ $(document).ready(function(){
             type: 'get',
             dataType: 'json',
             success:function(data){
+                $('span#no-of-business').text('0');
                 $.each(data,(i,business)=>{
                     $businessList.append('<div class="item">'+business.name+'</div>');
                     $('span#no-of-business').text(data.length);

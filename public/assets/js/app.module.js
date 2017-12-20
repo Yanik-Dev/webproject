@@ -30,12 +30,12 @@ let appModule = (function(){
                 if(response == 'online'){
                     appLevelAlert.nag('hide');
                 }else{
-                    appLevelAlert.nag('show');
+                   // appLevelAlert.nag('show');
                 }
             })
             
         }else{
-            appLevelAlert.nag('show');  
+           // appLevelAlert.nag('show');  
         }
     }
 

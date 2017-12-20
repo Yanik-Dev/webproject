@@ -1,7 +1,6 @@
-
 <?php 
- $title = "Account";
- include '../../includes/admin-layout.php';
+$title = "Account";
+include '../../includes/admin-layout.php';
 
 $token = SecurityService::generateToken("crsf_token");
 

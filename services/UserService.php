@@ -37,9 +37,29 @@ class UserService{
         return $user ?? null;
     }
 
+    public static function findByToken($token){
+        $sql = "SELECT * FROM users where reset_token = ?";
+        $data = null;
+        if($statement = @Database::getInstance()->prepare($sql)){
+            @$statement->bind_param("i", $token);
+            $statement->execute();
+            if($rows = $statement->get_result()){
+                $row = $rows->fetch_assoc();
+                    $data =  [
+                        "id"=>$row['user_id'],
+                        "email" => $row['email'],
+                        "firstname" => $row['first_name'],
+                        "lastname"=>$row['last_name'],
+                        "image"=>$row['image']
+                    ];
+                    
+            }
+        }
+        return $data;
+    }
 
     public static function changePassword($user){
-        $sql = "UPDATE users SET password = ?, salt = ? WHERE user_id = ? ";
+        $sql = "UPDATE users SET password = ?, salt = ?, reset_token = null WHERE user_id = ? ";
         if( $statement = @Database::getInstance()->prepare($sql)){
             @$statement->bind_param("ssi", $user->getPassword(),
                                             $user->getSalt(),
@@ -49,7 +69,19 @@ class UserService{
             }
             
         }
-      
+        return (isset($user))?true:false;
+    }
+
+    public static function setResetToken($user){
+        $sql = "UPDATE users SET reset_token = ? WHERE email = ? ";
+        if( $statement = @Database::getInstance()->prepare($sql)){
+            @$statement->bind_param("ss",  $user->getResetToken(),
+                                            $user->getEmail());
+            if(!$result = $statement->execute()){
+               $user = null;
+            }
+            
+        }
         return (isset($user))?true:false;
     }
 

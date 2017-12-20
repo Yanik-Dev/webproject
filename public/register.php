@@ -51,7 +51,7 @@
           <label>Confirm Password</label>
           <input type="password" placeholder="Confirm Password" name="confirmPassword">
         </div>
-        <input type="hidden" name="token" value="<?=SecurityService::generateToken("crsf_token");?>">
+        <input type="hidden" name="token" value="<?=$crsfToken;?>">
         <div class="inline field">
           <div class="ui checkbox">
             <input type="checkbox" id="terms-checkbox" value="accept"/>

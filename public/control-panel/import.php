@@ -98,10 +98,10 @@ if(count($errors) == 0){
                 </div>
                 <p><?=$errors[0];?></p>
 
-                <button class="ui primary button">
+                <a class="ui primary button"  href="../assets/blookup_template.xlsx" download>
                     <i class="download icon"></i>
                     Download Template
-                </button>
+                </a>
             </div>
         
        <?php  exit; else: ?>

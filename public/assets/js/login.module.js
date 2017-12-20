@@ -104,15 +104,17 @@ let LoginModule = (function(){
         if( !$resetPasswordForm.form('is valid', "email") ){
           return;
         }
+
         $existErrorMsg.hide();
-        $checkingEmailLoader.addClass("active");
+        $resetPasswordModal.find('.inverted.dimmer').addClass('active');
         $.ajax({
           url: './actions/register.php?email='+$emailInput.val(),
           dataType: 'text',
           type: 'get',
           contentType: 'application/x-www-form-urlencoded',
           success: function(data){
-            $checkingEmailLoader.removeClass("active");
+            
+            $resetPasswordModal.find('.inverted.dimmer').removeClass('active');
             console.log(data)
             let result = JSON.parse(data);
             if(!result){
@@ -126,19 +128,22 @@ let LoginModule = (function(){
         });
     }
 
-    function _reset(){
+    function _reset(event){
       event.preventDefault();
-      if( !$resetPasswordForm.form('is valid')  || isEmailUnique){
+      if( !$resetPasswordForm.form('is valid')  || !isEmailUnique){
           return;
       }
+      $resetPasswordModal.find('.inverted.dimmer').addClass('active');
       $.ajax({
-          url: './actions/register.php',
+          url: './actions/request-password-change.php?email='+$resetPasswordForm.find('#email').val(),
           dataType: 'text',
-          type: 'post',
+          type: 'get',
           contentType: 'application/x-www-form-urlencoded',
-          data: $resetPasswordForm.serialize(),
           success: (data)=>{
-            
+
+            $resetPasswordModal.find('.inverted.dimmer').removeClass('active');
+              window.location.href="./login.php?reset=true"
+              
           },
           error: _onError
       });
