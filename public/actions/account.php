@@ -17,6 +17,9 @@ if(isset($_FILES['file'])){
             $user=new User();
             $user->setUserId($id??0);
             $user->setImage($result["uploadedFile"]);
+
+            Utility::createThumbnail($_CONFIG["UPLOAD"]["DIRECTORY"].$result["uploadedFile"],
+                                        $_CONFIG["UPLOAD"]["DIRECTORY"].$result["uploadedFile"], 290);
             $updatedResult = UserService::updateImage($user);
             $status = $updatedResult["status"];
         }
@@ -80,14 +83,7 @@ if(!isset($token)){
         $errors[] = "tokens do not match";
     }  
 }
-
-if($firstname == "") {
-    $errors[] = "first name is required";
-}
-if($lastname == "") {
-    $errors[] = "last name is required";
-}
-    
+ 
 if($option == "changepassword"){
     $password = trim(strip_tags($_POST['password']));
     $passwordConfirm = trim(strip_tags($_POST['confirmPassword']));
@@ -100,8 +96,23 @@ if($option == "changepassword"){
         }
     }
 
+    if(count($errors) > 0){
+        $response->setCode(ResponseCode::HTTP_BAD_REQUEST);
+        $response->setErrors($errors);
+        $response->sendResponse();
+        exit;
+    }
+
 }
 
+
+if($firstname == "") {
+    $errors[] = "first name is required";
+}
+if($lastname == "") {
+    $errors[] = "last name is required";
+}
+   
 if(count($errors) > 0){
     $response->setCode(ResponseCode::HTTP_BAD_REQUEST);
     $response->setErrors($errors);
@@ -132,11 +143,11 @@ if($option == "changeinformation"){
 
 if(isset($id)){
     SessionService::setSessionObj("user", $user);
-    header('Location: ../account.php');
+    header('Location: ./../control-panel/account.php');
     exit;
 }else{
 
-    header('Location: ../account.php');
+    header('Location: ./../control-panel/account.php');
     exit;
 }
 

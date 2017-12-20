@@ -52,6 +52,23 @@
             
 
         </div>
+
+			<article>
+
+<header>
+    <h4>Group A</h4>
+</header>
+
+<ul>
+    <li><a href="https://unsplash.it/1200/800?image=321" data-lightbox="group_a"><span>Image One</span></a></li>
+    <li><a href="https://unsplash.it/1200/800?image=421" data-lightbox="group_a"><span>Image Two</span></a></li>
+    <li><a href="https://unsplash.it/1200/800?image=521" data-lightbox="group_a"><span>Image Three</span></a></li>
+    <li><a href="https://unsplash.it/1200/800?image=621" data-lightbox="group_a"><span>Image Four</span></a></li>
+    <li><a href="https://unsplash.it/1200/800?image=721" data-lightbox="group_a"><span>Image Five</span></a></li>
+    <li><a href="https://unsplash.it/1200/800?image=221" data-lightbox="group_a"><span>Image Six</span></a></li>
+</ul>
+
+</article>
         <div class="load-indicator centered ui grid" >
             <div class="ui  icon message column" style="background-color:transparent; box-shadow:0 0 0 0 rgba(0,0,0,0) inset, 0 0 0 0 transparent !important;">
                 <i class="notched circle loading icon"></i>
@@ -209,7 +226,7 @@
         <button class="mini ui icon button circular"  style=" z-index:99;position: absolute; top:5px;right: 0px" data-id="{{id}}">
             <i class="large close icon"></i> 
         </button>
-        <img class="ui large image" src="{{image}}">
+        <img data-lightbox="image-1" class="ui large image" src="{{image}}">
     </div>
 </script>
 <!-- ./offering item template -->
@@ -314,10 +331,23 @@
         var i = 0, len = filedata.files.length, img, reader, file;
         for (; i < len; i++) {
             file = filedata.files[i];
+            let ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+            if (file.size > 2000000 || file.fileSize > 2000000){
+                
+                continue;
+            }
+            if (ext != "png" || ext != "jpg" || ext != "jpeg") {
+
+               continue; 
+            }
+            
             if (window.FileReader) {
                 reader = new FileReader();
                 reader.onload = function(e) {
-                // showUploadedItem(e.target.result, file.fileName);
+                    let pic = {image:''};
+                    pic.image = file.fileName;
+                    console.log(e.target.result)
+                    $imageView.find('#image-area').append(Mustache.render(imageTemplate, pic));
                 };
                 reader.readAsDataURL(file);
             }

@@ -3,21 +3,10 @@
 require_once __DIR__.'/../../core/init.php';
 
 $response = new Response();
-/*
+
 $emailService = new MailService($_CONFIG['EMAIL']);
 
-$emailService->setRecipents([
-                                [
-                                    "name"=>"Yanik", 
-                                    "email"=>"yanikblake@yahoo.com"
-                                ]
-                            ]);
-$emailService->setSubject('testing');
-$emailService->setBody("<p>Testing</p>");
-$emailService->sendMail();
-exit;*/
 $errors = [];
-
 //check if email is unique
 if(isset($_GET)){
     if(isset($_GET['email'])){
@@ -93,6 +82,15 @@ if(isset($id)){
     $user->setSalt(null);
     $response->setCode(ResponseCode::HTTP_OK);
     $response->setContent($user);
+    $emailService->setRecipents([
+        [
+            "name"=>$user->getFirstname()+' '+$user->getLastname(), 
+            "email"=>$user->getEmail()
+        ]
+    ]);
+    $emailService->setSubject('Your Blookup account has been created.');
+    $emailService->setBody("Welcome "+(($user->getGender()=='Male')?'Mr':'Ms')+" "+$user->getLastname()+", thank you for resgistering to the blookup. To log into your account click here: "+$_SERVER['SERVER_NAME']+"/login.php");
+    $emailService->sendMail();
     $response->sendResponse();
 }else{
     //send back empty response with UNAUTHORIZED status

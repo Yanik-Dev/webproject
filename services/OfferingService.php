@@ -222,15 +222,16 @@ class OfferingService{
                                     );
             }
            
-                                            if(!$statement->execute()){
-                                                echo "Execute failed: (" . $statement->errno . ") " . $statement->error;
-                                                exit;
-                                             }
+            if(!$statement->execute()){
+                echo "Execute failed: (" . $statement->errno . ") " . $statement->error;
+                exit;
+            }
             if($rows = $statement->get_result()){
                 while($row = $rows->fetch_assoc()){
                     if($statement = @Database::getInstance()->prepare("SELECT * FROM offering_images WHERE fk_offering_id = ?")){
                         @$statement->bind_param("i", $row["offering_id"]);
                         $statement->execute();
+                        $imageDataSet = [];
                         if($imageRows = $statement->get_result()){
                             while($imageRow = $imageRows->fetch_assoc()){
                                 $imageDataSet[] = $imageRow["offering_image"];
@@ -260,9 +261,10 @@ class OfferingService{
             $statement->execute();
             if($rows = $statement->get_result()){
                 while($row = $rows->fetch_assoc()){
-                    if($statement = @Database::getInstance()->prepare("SELECT * FROM offering_images WHERE fk_offering_id = ?")){
+                    if($statement = @Database::getInstance()->prepare("SELECT * FROM offering_images WHERE fk_offering_id = ? ORDER BY ASC")){
                         @$statement->bind_param("i", $row["offering_id"]);
                         $statement->execute();
+                        $imageDataSet = [];
                         if($imageRows = $statement->get_result()){
                             while($imageRow = $imageRows->fetch_assoc()){
                                 $imageDataSet[] = $imageRow["offering_image"];
@@ -281,6 +283,10 @@ class OfferingService{
      * 
      */
     private static function _setData($item, $images){
+        $image = '';
+        if(count($images)>0){
+            $image = $images[0];
+        }
         return [
             "id"=>$item['offering_id'],
             "name" => $item['offering_name'],
@@ -293,8 +299,7 @@ class OfferingService{
             "type"=>$item['offering_type'],
             "businessId"=>$item['fk_business_id'],
             "businessName"=>$item['business_name'],
-            "imageId"=>$item["offering_images_id"],
-            "image"=>$item['offering_image'],
+            "image"=>$image,
             "images"=>$images,
             "endOfResults"=>false
         ];

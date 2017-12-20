@@ -1,4 +1,3 @@
-
 <?php 
 session_start();
 ini_set('display_errors', 1);
@@ -24,8 +23,10 @@ $session = SessionService::getActiveSession("user");
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script> -->
 
     <link rel="stylesheet" href="./assets/lib/semantic-ui/semantic.min.css" />
+    <link rel="stylesheet" href="./assets/lib/lightbox/css/lightbox.min.css" />
     <link rel="stylesheet" href="./assets/css/styles.css" />
     <script src="./assets/lib/jquery-3.2.1.min.js"></script>
+    <script src="./assets/lib/lightbox/js/lightbox.min.js"></script>
     <script src="./assets/lib/debounce.js"></script>
     <script src="./assets/lib/mustache.min.js"></script>
     <script src="./assets/lib/semantic-ui/semantic.min.js"></script>

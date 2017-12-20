@@ -241,7 +241,6 @@ $token = SecurityService::generateToken("crsf_token");
         let file = $this[0].files[0];
         let reader = new FileReader();
         reader.onload = function (e) {
-            
             formData = new FormData();
             formData.append('file', file);
             $dimmer.addClass('active');
@@ -254,6 +253,7 @@ $token = SecurityService::generateToken("crsf_token");
                 processData: false,
                 data: formData,
                 success:function(data){
+                  console.log(data)
                     let result = JSON.parse(data);
                     window.location.href="./account.php";
                 },

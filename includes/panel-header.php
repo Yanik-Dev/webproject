@@ -27,7 +27,9 @@ $session = SessionService::getActiveSession("user");
  
     <link rel="stylesheet" href="./../assets/lib/semantic-ui/semantic.min.css" />
     <link rel="stylesheet" href="./../assets/css/styles.css" />
+    <link rel="stylesheet" href="./../assets/lib/lightbox/css/lightbox.min.css" />
     <script src="./../assets/lib/jquery-3.2.1.min.js"></script>
+    <script src="./../assets/lib/lightbox/js/lightbox.min.js"></script>
     <script src="./../assets/lib/debounce.js"></script>
     <script src="./../assets/lib/mustache.min.js"></script>
     <script src="./../assets/lib/semantic-ui/semantic.min.js"></script>

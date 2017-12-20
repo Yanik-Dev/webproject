@@ -170,7 +170,6 @@ let BusinessModule = (function($){
                 processData: false,
                 data: formData,
                 success:function(data){
-                    console.log(data)
                     let result = JSON.parse(data);
                     if(!result){
                         imageViewer.attr('src', 'assets/img/img-wireframe.png');  
@@ -279,7 +278,6 @@ let BusinessModule = (function($){
     }
 
     function _onSubmit(data){
-        console.log(data)
         let result = JSON.parse(data);
         if(result.status == 200){
             let business = result.content;
